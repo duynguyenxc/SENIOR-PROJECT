@@ -31,3 +31,9 @@ docker compose down -v
 docker compose up -d --build
 ```
 
+## Internal account seed
+- Super admin account: `admin@vegbuffet.com`
+- Password: `password`
+
+Staff accounts are managed inside the app by the super admin.
+
