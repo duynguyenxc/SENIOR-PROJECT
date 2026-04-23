@@ -1,59 +1,28 @@
 services:
-  - type: pserv
-    name: veg-buffet-db
-    runtime: docker
-    rootDir: db
-    plan: starter
-    envVars:
-      - key: MARIADB_ROOT_PASSWORD
-        generateValue: true
-      - key: MARIADB_DATABASE
-        value: vegbuffet
-      - key: MARIADB_USER
-        value: app
-      - key: MARIADB_PASSWORD
-        generateValue: true
-    disk:
-      name: mariadb-data
-      mountPath: /var/lib/mysql
-      sizeGB: 1
-
   - type: web
     name: veg-buffet-web
     runtime: docker
     rootDir: web
-    plan: starter
+    plan: free
     healthCheckPath: /
     envVars:
       - key: APP_URL
         sync: false
       - key: DB_HOST
-        fromService:
-          type: pserv
-          name: veg-buffet-db
-          property: host
+        sync: false
       - key: DB_PORT
-        value: "3306"
+        sync: false
       - key: DB_NAME
-        fromService:
-          type: pserv
-          name: veg-buffet-db
-          envVarKey: MARIADB_DATABASE
+        sync: false
       - key: DB_USER
-        fromService:
-          type: pserv
-          name: veg-buffet-db
-          envVarKey: MARIADB_USER
+        sync: false
       - key: DB_PASS
-        fromService:
-          type: pserv
-          name: veg-buffet-db
-          envVarKey: MARIADB_PASSWORD
+        sync: false
+      - key: DB_SSL_CA_PATH
+        value: /etc/ssl/certs/ca-certificates.crt
+      - key: DB_SSL_VERIFY_SERVER_CERT
+        value: "true"
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_PUBLISHABLE_KEY
         sync: false
-    disk:
-      name: uploads
-      mountPath: /var/www/html/uploads
-      sizeGB: 1

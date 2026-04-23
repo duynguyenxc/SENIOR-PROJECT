@@ -37,34 +37,54 @@ docker compose up -d --build
 
 Staff accounts are managed inside the app by the super admin.
 
-## Render deployment
-This repo is prepared for Render with Docker-based services and environment variables only.
+## Render deployment (free tier)
+This repo is prepared for a free Render web service. Because free Render does not include private services or persistent disks, the free setup is intentionally web-only and expects an external MySQL or MariaDB database.
 
 ### Included Render files
-- `render.yaml`: Blueprint that creates:
-  - `veg-buffet-db` as a MariaDB private service with a persistent disk
-  - `veg-buffet-web` as the PHP/Apache web service with a persistent disk for uploaded images
-- `db/Dockerfile`: Copies `db/init` into MariaDB so schema and seed run on the first database boot
+- `render.yaml`: Blueprint that creates a single free Docker web service
 - `web/Dockerfile`: Builds a production image that includes the app source
-- `web/render-start.sh`: Ensures the uploads directory exists and is writable before Apache starts
+- `web/render-start.sh`: Ensures the uploads directory exists before Apache starts
+
+### What you need before deploying
+Prepare an external MySQL or MariaDB database first. You will need:
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASS`
+
+Then import these SQL files into that database:
+- `db/init/01_schema.sql`
+- `db/init/02_seed.sql`
+
+After importing, the default super admin account is:
+- `admin@vegbuffet.com`
+- `password`
 
 ### Deploy on Render
 1. Push this repo to GitHub.
 2. In Render, choose **New +** -> **Blueprint**.
 3. Select the repo and let Render read `render.yaml`.
-4. When Render asks for manual environment values, fill in:
-   - `APP_URL`: your Render service URL, for example `https://veg-buffet-web.onrender.com`
+4. When Render asks for environment values, fill in:
+   - `APP_URL`
+   - `DB_HOST`
+   - `DB_PORT`
+   - `DB_NAME`
+   - `DB_USER`
+   - `DB_PASS`
+   - `DB_SSL_CA_PATH`
+   - `DB_SSL_VERIFY_SERVER_CERT`
    - `STRIPE_SECRET_KEY`
    - `STRIPE_PUBLISHABLE_KEY`
-5. Create the Blueprint and wait for both services to finish deploying.
-6. After the first deploy, open the web service URL and log in with:
-   - `admin@vegbuffet.com`
-   - `password`
+5. Create the Blueprint and wait for the web service to deploy.
+6. After the service is live, verify the real Render URL and update `APP_URL` if needed.
+7. Redeploy once after fixing `APP_URL` so Stripe success and cancel redirects use the right domain.
 
-### Important Render notes
-- This setup uses persistent disks for MariaDB and uploaded images, so use a paid Render service type such as `Starter` or higher.
-- The MariaDB init SQL runs only when the database disk is empty, just like local Docker volumes.
-- Uploaded dish and takeout images are stored on the web service disk at `web/uploads`, so they persist across restarts and deploys.
-- If you change the Render domain or attach a custom domain later, update `APP_URL` in the Render dashboard so Stripe success and cancel URLs stay correct.
-- This project still uses the current lightweight Stripe success-page verification flow, so the app must be reachable at the same public URL configured in `APP_URL`.
+### Important free-tier notes
+- Free Render web services spin down after inactivity, so the first request after idle can be slow.
+- Free Render does not provide persistent storage. Any new files written to `web/uploads` can disappear after a redeploy or restart.
+- Because uploads are temporary on free tier, avoid relying on long-term image uploads in the admin panel unless you later move to paid Render or external object storage.
+- The app must be connected to an external database because free Render does not support the private MariaDB service used by the paid setup.
+- For TiDB Cloud Starter, keep TLS enabled by setting `DB_SSL_CA_PATH=/etc/ssl/certs/ca-certificates.crt` and `DB_SSL_VERIFY_SERVER_CERT=true`.
+- If you change the Render domain or attach a custom domain later, update `APP_URL` in the Render dashboard.
 
