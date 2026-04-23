@@ -73,47 +73,49 @@ render_header('Manage Staff');
     <?php if ($staffAccounts === []): ?>
       <div class="alert">No staff accounts have been created yet.</div>
     <?php else: ?>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Created</th>
-            <th class="align-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($staffAccounts as $staff): ?>
-            <?php $isActive = (bool)$staff['isActive']; ?>
+      <div class="table-shell">
+        <table class="table">
+          <thead>
             <tr>
-              <td><?= h((string)$staff['email']) ?></td>
-              <td>
-                <span class="<?= $isActive ? 'status-text-ok' : 'status-text-danger' ?>">
-                  <?= $isActive ? 'Active' : 'Disabled' ?>
-                </span>
-              </td>
-              <td><?= h(date('M j, Y', strtotime((string)$staff['createdTime']))) ?></td>
-              <td class="align-right">
-                <div class="order-actions">
-                  <form method="post" class="form-inline">
-                    <?= csrf_input() ?>
-                    <input type="hidden" name="action" value="toggle" />
-                    <input type="hidden" name="staffId" value="<?= (int)$staff['adminId'] ?>" />
-                    <input type="hidden" name="isActive" value="<?= $isActive ? 0 : 1 ?>" />
-                    <button type="submit" class="btn"><?= $isActive ? 'Disable' : 'Enable' ?></button>
-                  </form>
-                  <form method="post" class="form-inline">
-                    <?= csrf_input() ?>
-                    <input type="hidden" name="action" value="reset_password" />
-                    <input type="hidden" name="staffId" value="<?= (int)$staff['adminId'] ?>" />
-                    <button type="submit" class="btn btn-warning-soft">Reset Password</button>
-                  </form>
-                </div>
-              </td>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th class="align-right">Actions</th>
             </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <?php foreach ($staffAccounts as $staff): ?>
+              <?php $isActive = (bool)$staff['isActive']; ?>
+              <tr>
+                <td><?= h((string)$staff['email']) ?></td>
+                <td>
+                  <span class="<?= $isActive ? 'status-text-ok' : 'status-text-danger' ?>">
+                    <?= $isActive ? 'Active' : 'Disabled' ?>
+                  </span>
+                </td>
+                <td><?= h(date('M j, Y', strtotime((string)$staff['createdTime']))) ?></td>
+                <td class="align-right">
+                  <div class="order-actions">
+                    <form method="post" class="form-inline">
+                      <?= csrf_input() ?>
+                      <input type="hidden" name="action" value="toggle" />
+                      <input type="hidden" name="staffId" value="<?= (int)$staff['adminId'] ?>" />
+                      <input type="hidden" name="isActive" value="<?= $isActive ? 0 : 1 ?>" />
+                      <button type="submit" class="btn"><?= $isActive ? 'Disable' : 'Enable' ?></button>
+                    </form>
+                    <form method="post" class="form-inline">
+                      <?= csrf_input() ?>
+                      <input type="hidden" name="action" value="reset_password" />
+                      <input type="hidden" name="staffId" value="<?= (int)$staff['adminId'] ?>" />
+                      <button type="submit" class="btn btn-warning-soft">Reset Password</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
     <?php endif; ?>
   </section>
 

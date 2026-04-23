@@ -1,65 +1,66 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/lib/layout.php';
-require_once __DIR__ . '/lib/db.php';
+require_once __DIR__ . '/lib/orders.php';
+require_once __DIR__ . '/lib/takeout_catalog.php';
 ensure_session_started();
 
 $cust = current_customer();
-
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
+$pdo = db();
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_valid_csrf_token();
-    $action = $_POST['action'] ?? '';
+    $action = (string)($_POST['action'] ?? '');
     $setId = (int)($_POST['setId'] ?? 0);
-    
-    if ($action === 'add' && $setId > 0) {
-        if (!isset($_SESSION['cart'][$setId])) {
-            $_SESSION['cart'][$setId] = 1;
-        } else {
-            $_SESSION['cart'][$setId]++;
+    $lineId = (string)($_POST['lineId'] ?? '');
+
+    try {
+        if ($action === 'add' && $setId > 0) {
+            add_set_to_cart($setId, (string)($_POST['lineNotes'] ?? ''));
+            header('Location: /takeout.php?added=1');
+            exit;
         }
-        header('Location: /takeout.php?added=1');
-        exit;
-    } elseif ($action === 'remove' && $setId > 0) {
-        unset($_SESSION['cart'][$setId]);
-        header('Location: /cart.php');
-        exit;
+
+        if ($action === 'add_custom' && $setId > 0) {
+            $customSet = fetch_takeout_set_by_id($pdo, $setId);
+            if (!$customSet || empty($customSet['allowsCustomSelection'])) {
+                throw new RuntimeException('Custom takeout box is not available right now.');
+            }
+
+            add_custom_takeout_to_cart(
+                $setId,
+                (string)($_POST['selectedDishes'] ?? ''),
+                (string)($_POST['lineNotes'] ?? ''),
+                max(1, (int)($customSet['selectionLimit'] ?? CUSTOM_TAKEOUT_DEFAULT_LIMIT))
+            );
+            header('Location: /takeout.php?added=1');
+            exit;
+        }
+
+        if ($action === 'remove' && $lineId !== '') {
+            remove_cart_item($lineId);
+            header('Location: /cart.php');
+            exit;
+        }
+    } catch (Throwable $exception) {
+        $error = $exception->getMessage();
     }
 }
 
-$pdo = db();
-$cartItems = [];
-$total = 0.0;
-if (!empty($_SESSION['cart'])) {
-    $ids = array_keys($_SESSION['cart']);
-    $in = str_repeat('?,', count($ids) - 1) . '?';
-    $stmt = $pdo->prepare("SELECT setId, setName, price FROM TakeoutSet WHERE setId IN ($in)");
-    $stmt->execute($ids);
-    $rows = $stmt->fetchAll();
-    
-    foreach ($rows as $r) {
-        $id = (int)$r['setId'];
-        $qty = $_SESSION['cart'][$id];
-        $sub = $qty * (float)$r['price'];
-        $total += $sub;
-        $cartItems[] = [
-            'setId' => $id,
-            'setName' => $r['setName'],
-            'price' => $r['price'],
-            'qty' => $qty,
-            'subtotal' => $sub
-        ];
-    }
-}
+$cartItems = build_cart_items_for_display($pdo, normalize_cart_items());
+$total = calculate_cart_total_amount($pdo, normalize_cart_items());
 
 render_header('Your Cart');
 ?>
 <section class="hero">
   <h1>Your Cart</h1>
+  <p class="muted">Review your order and confirm your pickup details before payment.</p>
 </section>
+
+<?php if ($error !== ''): ?>
+  <div class="alert alert-danger stack-lg"><?= h($error) ?></div>
+<?php endif; ?>
 
 <div class="grid">
   <section class="card">
@@ -67,31 +68,41 @@ render_header('Your Cart');
     <?php if (empty($cartItems)): ?>
       <div class="alert">Your cart is empty. <br/><br/><a href="/takeout.php" class="btn btn-primary">Browse Takeout Menu</a></div>
     <?php else: ?>
-      <table class="table">
-        <tr class="table-header-row">
-          <th>Item</th>
-          <th>Price</th>
-          <th>Qty</th>
-          <th class="align-right">Total</th>
-          <th></th>
-        </tr>
-        <?php foreach ($cartItems as $item): ?>
-          <tr class="table-row">
-            <td><?= h($item['setName']) ?></td>
-            <td>$<?= number_format((float)$item['price'], 2) ?></td>
-            <td><?= $item['qty'] ?></td>
-            <td class="align-right">$<?= number_format($item['subtotal'], 2) ?></td>
-            <td class="align-right">
-               <form method="post" action="/cart.php" class="form-inline">
-                 <?= csrf_input() ?>
-                 <input type="hidden" name="action" value="remove" />
-                 <input type="hidden" name="setId" value="<?= $item['setId'] ?>" />
-                 <button type="submit" class="btn">X</button>
-               </form>
-            </td>
+      <div class="table-shell">
+        <table class="table">
+          <tr class="table-header-row">
+            <th>Item</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th class="align-right">Total</th>
+            <th></th>
           </tr>
-        <?php endforeach; ?>
-      </table>
+          <?php foreach ($cartItems as $item): ?>
+            <tr class="table-row">
+              <td>
+                <strong><?= h($item['setName']) ?></strong>
+                <?php if (!empty($item['selectedDishes'])): ?>
+                  <div class="muted text-sm">Selected dishes: <?= h((string)$item['selectedDishes']) ?></div>
+                <?php endif; ?>
+                <?php if (!empty($item['lineNotes'])): ?>
+                  <div class="muted text-sm">Item note: <?= h((string)$item['lineNotes']) ?></div>
+                <?php endif; ?>
+              </td>
+              <td>$<?= number_format((float)$item['price'], 2) ?></td>
+              <td><?= $item['qty'] ?></td>
+              <td class="align-right">$<?= number_format($item['subtotal'], 2) ?></td>
+              <td class="align-right">
+                 <form method="post" action="/cart.php" class="form-inline">
+                   <?= csrf_input() ?>
+                   <input type="hidden" name="action" value="remove" />
+                   <input type="hidden" name="lineId" value="<?= h((string)$item['id']) ?>" />
+                   <button type="submit" class="btn">X</button>
+                 </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+      </div>
       
       <div class="summary-total">
         Total: <strong class="text-accent">$<?= number_format($total, 2) ?></strong>

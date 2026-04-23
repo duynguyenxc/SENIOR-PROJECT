@@ -4,17 +4,17 @@ declare(strict_types=1);
 require_once __DIR__ . '/orders.php';
 
 function app_base_url(): string {
-  $baseUrl = getenv('APP_URL') ?: 'http://localhost:8080';
+  $baseUrl = getenv('APP_URL') !== false ? (string)getenv('APP_URL') : 'http://localhost:8080';
   return rtrim($baseUrl, '/');
 }
 
 function stripe_secret_key(): string {
-  $secretKey = getenv('STRIPE_SECRET_KEY') ?: '';
+  $secretKey = getenv('STRIPE_SECRET_KEY') !== false ? (string)getenv('STRIPE_SECRET_KEY') : '';
   return trim($secretKey);
 }
 
 function stripe_publishable_key(): string {
-  $publishableKey = getenv('STRIPE_PUBLISHABLE_KEY') ?: '';
+  $publishableKey = getenv('STRIPE_PUBLISHABLE_KEY') !== false ? (string)getenv('STRIPE_PUBLISHABLE_KEY') : '';
   return trim($publishableKey);
 }
 
@@ -71,6 +71,9 @@ function build_stripe_line_items(array $items): array {
   foreach ($items as $index => $item) {
     $lineItems["line_items[$index][price_data][currency]"] = 'usd';
     $lineItems["line_items[$index][price_data][product_data][name]"] = (string)$item['setName'];
+    if (!empty($item['lineDescription'])) {
+      $lineItems["line_items[$index][price_data][product_data][description]"] = (string)$item['lineDescription'];
+    }
     $lineItems["line_items[$index][price_data][unit_amount]"] = (int)round(((float)$item['price']) * 100);
     $lineItems["line_items[$index][quantity]"] = (int)$item['quantity'];
   }

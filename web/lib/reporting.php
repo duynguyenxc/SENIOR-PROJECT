@@ -97,18 +97,18 @@ function fetch_best_selling_sets(PDO $pdo, DateTimeImmutable $startDate, DateTim
 
   $query = '
     SELECT
-      ts.setId,
-      ts.setName,
+      COALESCE(ts.setId, 0) AS setId,
+      COALESCE(ts.setName, oi.lineLabel) AS setName,
       SUM(oi.quantity) AS totalQuantity,
-      SUM(oi.quantity * ts.price) AS totalRevenue
+      SUM(oi.quantity * oi.unitPrice) AS totalRevenue
     FROM `Order` o
     JOIN OrderItem oi ON oi.orderId = o.orderId
-    JOIN TakeoutSet ts ON ts.setId = oi.setId
+    LEFT JOIN TakeoutSet ts ON ts.setId = oi.setId
     WHERE o.status IN (' . sql_placeholders($countedStatuses) . ')
       AND o.createdTime >= ?
       AND o.createdTime < ?
-    GROUP BY ts.setId, ts.setName
-    ORDER BY totalQuantity DESC, totalRevenue DESC, ts.setName ASC
+    GROUP BY COALESCE(ts.setId, 0), COALESCE(ts.setName, oi.lineLabel)
+    ORDER BY totalQuantity DESC, totalRevenue DESC, setName ASC
     LIMIT ' . max(1, $limit);
 
   $stmt = $pdo->prepare($query);

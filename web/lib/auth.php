@@ -38,6 +38,44 @@ function safe_redirect_target(?string $target, string $default = '/'): string {
   return $target;
 }
 
+function exit_with_html_error_page(
+  int $statusCode,
+  string $title,
+  string $heading,
+  string $message,
+  string $primaryHref = '/',
+  string $primaryLabel = 'Return Home'
+): never {
+  http_response_code($statusCode);
+  ?>
+  <!doctype html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><?= htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="hero hero-centered">
+        <div class="hero-message">403</div>
+        <h1><?= htmlspecialchars($heading, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></h1>
+        <p class="muted"><?= htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></p>
+        <div class="btnrow btnrow-centered">
+          <a href="<?= htmlspecialchars($primaryHref, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>" class="btn btn-primary">
+            <?= htmlspecialchars($primaryLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
+          </a>
+          <a href="/" class="btn">Public Site</a>
+        </div>
+      </section>
+    </main>
+  </body>
+  </html>
+  <?php
+  exit;
+}
+
 function require_customer(?string $redirectTo = null): array {
   $cust = current_customer();
   if ($cust !== null) return $cust;
@@ -111,8 +149,14 @@ function require_super_admin(): array {
     return $admin;
   }
 
-  http_response_code(403);
-  exit('Access denied. Super admin permissions are required.');
+  exit_with_html_error_page(
+    200,
+    'Access Denied',
+    'Super Admin Access Required',
+    'This page is limited to the super admin account. Staff members can continue using the order queue and order history.',
+    '/admin/index.php',
+    'Back to Dashboard'
+  );
 }
 
 function login_admin(array $row): void {

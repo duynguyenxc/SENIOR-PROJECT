@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/lib/layout.php';
-require_once __DIR__ . '/lib/db.php';
+require_once __DIR__ . '/lib/menu_catalog.php';
 
 $pdo = db();
 
-$days = $pdo->query('SELECT dayId, dayName, sortOrder FROM Day ORDER BY sortOrder')->fetchAll();
+$days = fetch_days($pdo);
 
 $dayId = (int)($_GET['day'] ?? 0);
 if ($dayId <= 0 && $days) {
@@ -20,25 +20,9 @@ if ($dayId <= 0 && $days) {
   if ($dayId <= 0) $dayId = (int)$days[0]['dayId'];
 }
 
-$day = null;
-if ($dayId > 0) {
-  $stmt = $pdo->prepare('SELECT dayId, dayName, sortOrder FROM Day WHERE dayId = ? LIMIT 1');
-  $stmt->execute([$dayId]);
-  $day = $stmt->fetch() ?: null;
-}
+$day = $dayId > 0 ? fetch_day_by_id($pdo, $dayId) : null;
 
-$dishes = [];
-if ($day) {
-  $stmt = $pdo->prepare(
-    'SELECT Dish.dishId, Dish.dishName, Dish.imageUrl
-     FROM DayMenuItem
-     JOIN Dish ON Dish.dishId = DayMenuItem.dishId
-     WHERE DayMenuItem.dayId = ?
-     ORDER BY Dish.dishName'
-  );
-  $stmt->execute([(int)$day['dayId']]);
-  $dishes = $stmt->fetchAll();
-}
+$dishes = $day ? fetch_day_menu_dishes($pdo, (int)$day['dayId']) : [];
 
 $price = ($day && (int)$day['sortOrder'] === 4) ? 15 : 17;
 
@@ -77,7 +61,14 @@ render_header('Menu');
     <?php else: ?>
       <div class="card-grid-200">
         <?php foreach ($dishes as $dish): ?>
-          <div class="card dish-card">
+          <button
+            type="button"
+            class="card dish-card dish-card-button"
+            data-dish-trigger
+            data-dish-name="<?= h((string)$dish['dishName']) ?>"
+            data-dish-description="<?= h((string)($dish['description'] ?? 'Ingredients will be added soon.')) ?>"
+            data-dish-image="<?= h((string)($dish['imageUrl'] ?? '')) ?>"
+          >
             <div class="dish-card-media">
               <?php if ($dish['imageUrl']): ?>
                 <img src="<?= h((string)$dish['imageUrl']) ?>" alt="<?= h((string)$dish['dishName']) ?>" class="dish-card-image" />
@@ -87,13 +78,28 @@ render_header('Menu');
             </div>
             <div class="dish-card-body">
               <h3 class="dish-card-title"><?= h((string)$dish['dishName']) ?></h3>
+              <p class="dish-card-copy">Click to view ingredients and details.</p>
             </div>
-          </div>
+          </button>
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
   </section>
 </div>
+
+<dialog class="dish-dialog" data-dish-dialog>
+  <div class="dish-dialog-card">
+    <button type="button" class="dish-dialog-close" data-dish-close aria-label="Close dish details">×</button>
+    <div class="dish-dialog-media" data-dish-dialog-media>
+      <img src="" alt="" data-dish-dialog-image class="dish-dialog-image" hidden />
+      <div class="dish-dialog-empty" data-dish-dialog-empty>No image available</div>
+    </div>
+    <div class="dish-dialog-body">
+      <h3 data-dish-dialog-title></h3>
+      <p class="dish-dialog-copy muted" data-dish-dialog-description></p>
+    </div>
+  </div>
+</dialog>
 
 <?php render_footer(); ?>
 

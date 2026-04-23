@@ -13,14 +13,26 @@ if ($orderId <= 0 || !$sessionId) {
 }
 
 $pdo = db();
-$order = fetch_pending_order_for_customer($pdo, $orderId, (int)$customer['customerId']);
+$order = fetch_order_for_customer($pdo, $orderId, (int)$customer['customerId']);
 $paymentVerified = false;
+$statusMessage = 'We could not match this payment return to an active order.';
+$orderNumberLabel = '#' . $orderId;
 
 if ($order) {
-    try {
-        $paymentVerified = finalize_payment_success($pdo, $orderId, $sessionId);
-    } catch (Throwable $e) {
-        die("Error finalizing payment: " . $e->getMessage());
+    $orderNumberLabel = display_order_number($order);
+    if ((string)$order['status'] === ORDER_STATUS_PENDING) {
+        try {
+            $paymentVerified = finalize_payment_success($pdo, $orderId, $sessionId);
+            $statusMessage = $paymentVerified
+                ? 'Your order ' . $orderNumberLabel . ' has been verified and is being prepared.'
+                : 'This payment return was already processed earlier for order ' . $orderNumberLabel . '.';
+        } catch (Throwable $e) {
+            die("Error finalizing payment: " . $e->getMessage());
+        }
+    } elseif (in_array((string)$order['status'], order_counted_revenue_statuses(), true)) {
+        $statusMessage = 'Your order ' . $orderNumberLabel . ' was already verified earlier and is in the kitchen workflow.';
+    } elseif ((string)$order['status'] === ORDER_STATUS_CANCELLED) {
+        $statusMessage = 'Order ' . $orderNumberLabel . ' was already cancelled before payment could be finalized.';
     }
 }
 
@@ -29,13 +41,7 @@ render_header('Payment Success');
 <section class="hero hero-centered">
   <div class="hero-message">✅</div>
   <h1 class="text-ok">Payment Successful!</h1>
-  <p class="muted">
-    <?php if ($paymentVerified || !$order): ?>
-      Your order #<?= $orderId ?> has been verified and is being prepared.
-    <?php else: ?>
-      We received your payment return and are finalizing order #<?= $orderId ?> now.
-    <?php endif; ?>
-  </p>
+  <p class="muted"><?= h($statusMessage) ?></p>
   <div class="btnrow btnrow-centered">
     <a href="/" class="btn btn-primary">Return Home</a>
     <a href="/my_orders.php" class="btn">View My Orders</a>

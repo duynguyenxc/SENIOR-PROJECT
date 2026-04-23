@@ -5,7 +5,7 @@ require_once __DIR__ . '/lib/csrf.php';
 require_once __DIR__ . '/lib/orders.php';
 ensure_session_started();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['cart'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || cart_items_are_empty()) {
     header('Location: /cart.php');
     exit;
 }
@@ -29,9 +29,9 @@ try {
         $name,
         $phone,
         $time,
-        $_SESSION['cart']
+        normalize_cart_items()
     );
-    $_SESSION['cart'] = []; //clear cart
+    clear_cart();
     
     header('Location: /pay.php?orderId=' . $orderId);
     exit;

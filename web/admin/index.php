@@ -14,13 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($orderId > 0) {
         if ($action === 'prepare') {
-            $pdo->prepare("UPDATE `Order` SET status = ? WHERE orderId = ?")->execute([ORDER_STATUS_PREPARING, $orderId]);
+            update_order_status($pdo, $orderId, ORDER_STATUS_PREPARING);
         } elseif ($action === 'ready') {
-            $pdo->prepare("UPDATE `Order` SET status = ? WHERE orderId = ?")->execute([ORDER_STATUS_READY, $orderId]);
+            update_order_status($pdo, $orderId, ORDER_STATUS_READY);
         } elseif ($action === 'complete') {
-            $pdo->prepare("UPDATE `Order` SET status = ? WHERE orderId = ?")->execute([ORDER_STATUS_COMPLETED, $orderId]);
+            update_order_status($pdo, $orderId, ORDER_STATUS_COMPLETED);
         } elseif ($action === 'cancel' && is_super_admin($admin)) {
-            $pdo->prepare("UPDATE `Order` SET status = ? WHERE orderId = ?")->execute([ORDER_STATUS_CANCELLED, $orderId]);
+            update_order_status($pdo, $orderId, ORDER_STATUS_CANCELLED);
         }
     }
     header('Location: /admin/index.php');
@@ -66,7 +66,7 @@ render_header('Dashboard');
   </article>
 </section>
 
-<div class="stack-lg">
+<div class="stack-lg" data-order-stream="/admin/order_stream.php?scope=queue">
   <?php if (!$orders): ?>
     <div class="alert">No active orders at this time.</div>
   <?php else: ?>
@@ -74,12 +74,27 @@ render_header('Dashboard');
       <?php foreach ($orders as $o): ?>
         <?php
           $statusClass = order_status_badge_class((string)$o['status']);
+          $orderNumberLabel = display_order_number($o);
         ?>
         <div class="card order-card <?= $statusClass ?>">
           <div class="order-header">
             <div>
-              <h3 class="order-title">Order #<?= str_pad((string)$o['dailyOrderNumber'], 3, '0', STR_PAD_LEFT) ?> - <?= h($o['customerName']) ?></h3>
+              <h3 class="order-title">Order <?= h($orderNumberLabel) ?> - <?= h($o['customerName']) ?></h3>
               <div class="muted">Phone: <?= h($o['customerPhone']) ?> | Total: <strong>$<?= h($o['totalAmount']) ?></strong></div>
+              <?php if (!empty($o['specialInstructions']) || !empty($o['allergyNotes'])): ?>
+                <div class="note-list note-list-top">
+                  <?php if (!empty($o['specialInstructions'])): ?>
+                    <div class="note-callout note-callout-danger">
+                      <strong>Special instructions:</strong> <?= nl2br(h((string)$o['specialInstructions'])) ?>
+                    </div>
+                  <?php endif; ?>
+                  <?php if (!empty($o['allergyNotes'])): ?>
+                    <div class="note-callout note-callout-danger">
+                      <strong>Allergy notes:</strong> <?= nl2br(h((string)$o['allergyNotes'])) ?>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              <?php endif; ?>
             </div>
             <div class="order-side">
               <strong class="status-badge <?= $statusClass ?>"><?= h($o['status']) ?></strong>
@@ -90,12 +105,23 @@ render_header('Dashboard');
             <strong class="muted">Items:</strong>
             <ul class="order-items-list">
               <?php foreach (($itemsByOrder[$o['orderId']] ?? []) as $i): ?>
-                <li><?= $i['quantity'] ?>x <?= h($i['setName']) ?></li>
+                <li>
+                  <?= $i['quantity'] ?>x <?= h((string)$i['lineLabel']) ?>
+                  <?php if (!empty($i['lineDescription']) && (string)$i['lineType'] === ORDER_LINE_TYPE_CUSTOM): ?>
+                    <div class="muted text-sm"><?= nl2br(h((string)$i['lineDescription'])) ?></div>
+                  <?php endif; ?>
+                  <?php if (!empty($i['lineNotes'])): ?>
+                    <div class="note-callout note-callout-danger note-callout-inline">
+                      <strong>Item note:</strong> <?= nl2br(h((string)$i['lineNotes'])) ?>
+                    </div>
+                  <?php endif; ?>
+                </li>
               <?php endforeach; ?>
             </ul>
           </div>
           
           <div class="order-actions">
+            <a href="/admin/order.php?orderId=<?= (int)$o['orderId'] ?>" class="btn">View Details</a>
             <?php if ($o['status'] === 'Paid'): ?>
               <form method="post" class="form-inline">
                 <?= csrf_input() ?>

@@ -2,16 +2,17 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/orders.php';
-require_super_admin();
+$admin = require_admin();
 
 $pdo = db();
+cancel_stale_pending_orders($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_valid_csrf_token();
     $action = $_POST['action'] ?? '';
     $orderId = (int)($_POST['orderId'] ?? 0);
     
-    if ($orderId > 0 && $action === 'delete') {
+    if ($orderId > 0 && $action === 'delete' && is_super_admin($admin)) {
         $pdo->prepare("DELETE FROM `Order` WHERE orderId = ?")->execute([$orderId]);
     }
     header('Location: /admin/history.php');
@@ -34,8 +35,8 @@ foreach ($allOrders as $o) {
 render_header('Order History');
 ?>
 <section class="hero hero-compact">
-  <h2>Historical Order Reporting</h2>
-  <p class="muted">Comprehensive audit log of all system transactions grouped by date.</p>
+  <h2>Historical Order Review</h2>
+  <p class="muted">Recent and past orders for staff review. Destructive cleanup remains limited to the SuperAdmin.</p>
 </section>
 
 <div class="stack-lg">
@@ -61,39 +62,47 @@ render_header('Order History');
           </div>
         </div>
         
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Order #</th>
-              <th>Customer</th>
-              <th>Phone</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th class="align-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($ordersToday as $o): ?>
+        <div class="table-shell">
+          <table class="table">
+            <thead>
               <tr>
-                <td><strong>#<?= str_pad((string)$o['dailyOrderNumber'], 3, '0', STR_PAD_LEFT) ?></strong></td>
-                <td><?= h($o['customerName']) ?></td>
-                <td><?= h($o['customerPhone']) ?></td>
-                <td>$<?= h($o['totalAmount']) ?></td>
-                <td>
-                   <span class="status-pill <?= order_status_badge_class((string)$o['status']) ?>"><?= h($o['status']) ?></span>
-                </td>
-                <td class="align-right">
-                  <form method="post" class="form-inline" onsubmit="return confirm('Are you sure you want to completely erase this order records? This cannot be undone.');">
-                    <?= csrf_input() ?>
-                    <input type="hidden" name="action" value="delete" />
-                    <input type="hidden" name="orderId" value="<?= $o['orderId'] ?>" />
-                    <button type="submit" class="btn-link-danger">Delete</button>
-                  </form>
-                </td>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th class="align-right">Actions</th>
               </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php foreach ($ordersToday as $o): ?>
+                <?php $orderNumberLabel = display_order_number($o); ?>
+                <tr>
+                  <td><strong><?= h($orderNumberLabel) ?></strong></td>
+                  <td><?= h($o['customerName']) ?></td>
+                  <td><?= h($o['customerPhone']) ?></td>
+                  <td>$<?= h($o['totalAmount']) ?></td>
+                  <td>
+                     <span class="status-pill <?= order_status_badge_class((string)$o['status']) ?>"><?= h($o['status']) ?></span>
+                  </td>
+                  <td class="align-right">
+                    <div class="table-actions">
+                      <a href="/admin/order.php?orderId=<?= (int)$o['orderId'] ?>" class="btn">View</a>
+                      <?php if (is_super_admin($admin)): ?>
+                        <form method="post" class="form-inline" onsubmit="return confirm('Are you sure you want to completely erase this order records? This cannot be undone.');">
+                          <?= csrf_input() ?>
+                          <input type="hidden" name="action" value="delete" />
+                          <input type="hidden" name="orderId" value="<?= $o['orderId'] ?>" />
+                          <button type="submit" class="btn-link-danger">Delete</button>
+                        </form>
+                      <?php endif; ?>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       </div>
     <?php endforeach; ?>
   <?php endif; ?>

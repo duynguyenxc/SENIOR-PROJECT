@@ -1,9 +1,3 @@
-create database if not exists vegbuffet
-  character set utf8mb4
-  collate utf8mb4_unicode_ci;
-
-use vegbuffet;
-
 create table if not exists Admin (
   adminId int not null auto_increment,
   email varchar(255) not null,
@@ -38,7 +32,9 @@ create table if not exists Day (
 create table if not exists Dish (
   dishId int not null auto_increment,
   dishName varchar(255) not null,
+  description text null,
   imageUrl varchar(2048) null,
+  isActive boolean not null default 1,
   primary key (dishId),
   unique key uq_dish_name (dishName)
 ) engine=InnoDB;
@@ -66,7 +62,11 @@ create table if not exists TakeoutSet (
   setName varchar(255) not null,
   description varchar(1024) not null,
   price decimal(10,2) not null,
+  imageUrl varchar(2048) null,
   isAvailable boolean not null,
+  sortOrder int not null default 0,
+  allowsCustomSelection boolean not null default 0,
+  selectionLimit int not null default 0,
   primary key (setId),
   unique key uq_set_name (setName),
   key idx_set_available (isAvailable)
@@ -81,7 +81,10 @@ create table if not exists `Order` (
   pickupTime datetime not null,
   status varchar(32) not null,
   totalAmount decimal(10,2) not null default 0.00,
+  specialInstructions text null,
+  allergyNotes text null,
   createdTime datetime not null,
+  updatedTime datetime not null,
   primary key (orderId),
   key idx_order_customer (customerId),
   key idx_order_daily (dailyOrderNumber),
@@ -93,7 +96,13 @@ create table if not exists `Order` (
 create table if not exists OrderItem (
   orderItemId int not null auto_increment,
   orderId int not null,
-  setId int not null,
+  setId int null,
+  lineType varchar(32) not null default 'set',
+  lineLabel varchar(255) not null,
+  unitPrice decimal(10,2) not null default 0.00,
+  lineDescription text null,
+  lineNotes text null,
+  imageUrl varchar(2048) null,
   quantity int not null,
   primary key (orderItemId),
   key idx_orderitem_order (orderId),
@@ -104,7 +113,7 @@ create table if not exists OrderItem (
     on update cascade,
   constraint fk_orderitem_set
     foreign key (setId) references TakeoutSet(setId)
-    on delete restrict
+    on delete set null
     on update cascade
 ) engine=InnoDB;
 

@@ -5,6 +5,7 @@ require_once __DIR__ . '/lib/orders.php';
 $cust = require_customer();
 
 $pdo = db();
+cancel_stale_pending_orders($pdo);
 $stmt = $pdo->prepare("
   SELECT * FROM `Order` 
   WHERE customerId = ? 
@@ -22,7 +23,7 @@ render_header('My Orders | Veg Buffet');
   <p class="muted">Track the status of your recent takeout orders.</p>
 </section>
 
-<div class="stack-lg">
+<div class="stack-lg" data-order-stream="/order_status_stream.php">
   <?php if (!$orders): ?>
     <div class="alert">You haven't placed any orders yet. <a href="/takeout.php">Order now!</a></div>
   <?php else: ?>
@@ -30,13 +31,20 @@ render_header('My Orders | Veg Buffet');
       <?php foreach ($orders as $o): ?>
         <?php
           $statusClass = order_status_badge_class((string)$o['status']);
+          $orderNumberLabel = display_order_number($o);
         ?>
         <div class="card order-card <?= $statusClass ?>">
           <div class="order-header">
             <div>
-              <h3 class="order-title">Order #<?= str_pad((string)$o['dailyOrderNumber'], 3, '0', STR_PAD_LEFT) ?></h3>
+              <h3 class="order-title">Order <?= h($orderNumberLabel) ?></h3>
               <div class="muted">Pickup: <strong><?= date('M j, Y g:i A', strtotime($o['pickupTime'])) ?></strong></div>
               <div class="muted meta-top-xs">Total: <strong>$<?= h($o['totalAmount']) ?></strong></div>
+              <?php if (!empty($o['specialInstructions'])): ?>
+                <div class="muted meta-top-xs">Special instructions: <?= h((string)$o['specialInstructions']) ?></div>
+              <?php endif; ?>
+              <?php if (!empty($o['allergyNotes'])): ?>
+                <div class="muted meta-top-xs">Allergy notes: <?= h((string)$o['allergyNotes']) ?></div>
+              <?php endif; ?>
             </div>
             <div class="order-side">
               <strong class="status-badge <?= $statusClass ?>"><?= h($o['status']) ?></strong>
@@ -47,7 +55,15 @@ render_header('My Orders | Veg Buffet');
             <strong class="muted">Items:</strong>
             <ul class="order-items-list">
               <?php foreach (($itemsByOrder[$o['orderId']] ?? []) as $i): ?>
-                <li><?= $i['quantity'] ?>x <?= h($i['setName']) ?></li>
+                <li>
+                  <?= $i['quantity'] ?>x <?= h((string)$i['lineLabel']) ?>
+                  <?php if (!empty($i['lineDescription']) && (string)$i['lineType'] === ORDER_LINE_TYPE_CUSTOM): ?>
+                    <div class="muted text-sm"><?= nl2br(h((string)$i['lineDescription'])) ?></div>
+                  <?php endif; ?>
+                  <?php if (!empty($i['lineNotes'])): ?>
+                    <div class="muted text-sm">Item note: <?= h((string)$i['lineNotes']) ?></div>
+                  <?php endif; ?>
+                </li>
               <?php endforeach; ?>
             </ul>
           </div>

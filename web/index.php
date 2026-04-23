@@ -9,10 +9,10 @@ render_header('Home | Veg Buffet');
 
 <section class="hero hero-home">
   <h1 class="hero-home-title">Welcome to <span class="text-accent">Veg Buffet</span></h1>
-  <p class="hero-home-copy" style="display:block; width:100%; max-width:600px; margin:0 auto 30px; text-align:center;">
+  <p class="hero-home-copy" style="display: block; width: 100%; max-width: 600px; margin: 0 auto 30px; text-align: center !important;">
     Experience the finest vegetarian cuisine crafted fresh every day. Join us for a unique and ever-changing weekly menu.
   </p>
-  <div class="btnrow btnrow-centered">
+  <div class="btnrow btnrow-centered btnrow-wrap">
     <a href="/menu.php" class="btn btn-primary btn-roomy">View Weekly Menu</a>
     <a href="/takeout.php" class="btn btn-roomy">Order Takeout</a>
   </div>

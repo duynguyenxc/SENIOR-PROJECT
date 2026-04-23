@@ -7,6 +7,7 @@ require_once __DIR__ . '/../lib/reporting.php';
 require_super_admin();
 
 $pdo = db();
+cancel_stale_pending_orders($pdo);
 $range = normalized_report_range((string)($_GET['range'] ?? 'week'));
 $startInput = (string)($_GET['start'] ?? '');
 $endInput = (string)($_GET['end'] ?? '');
@@ -115,24 +116,26 @@ render_header('Admin Reports');
       <?php if ($bestSellers === []): ?>
         <div class="alert">No paid sales found in the selected period.</div>
       <?php else: ?>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Set</th>
-              <th>Units Sold</th>
-              <th>Revenue</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($bestSellers as $set): ?>
+        <div class="table-shell">
+          <table class="table">
+            <thead>
               <tr>
-                <td><?= h((string)$set['setName']) ?></td>
-                <td><?= (int)$set['totalQuantity'] ?></td>
-                <td>$<?= number_format((float)$set['totalRevenue'], 2) ?></td>
+                <th>Set</th>
+                <th>Units Sold</th>
+                <th>Revenue</th>
               </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php foreach ($bestSellers as $set): ?>
+                <tr>
+                  <td><?= h((string)$set['setName']) ?></td>
+                  <td><?= (int)$set['totalQuantity'] ?></td>
+                  <td>$<?= number_format((float)$set['totalRevenue'], 2) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       <?php endif; ?>
     </section>
   </div>

@@ -7,11 +7,11 @@ function db(): PDO {
     return $pdo;
   }
 
-  $host = getenv('DB_HOST') ?: '127.0.0.1';
-  $port = getenv('DB_PORT') ?: '3306';
-  $name = getenv('DB_NAME') ?: 'vegbuffet';
-  $user = getenv('DB_USER') ?: 'root';
-  $pass = getenv('DB_PASS') ?: '';
+  $host = getenv('DB_HOST') !== false ? (string)getenv('DB_HOST') : '127.0.0.1';
+  $port = getenv('DB_PORT') !== false ? (string)getenv('DB_PORT') : '3306';
+  $name = getenv('DB_NAME') !== false ? (string)getenv('DB_NAME') : 'vegbuffet';
+  $user = getenv('DB_USER') !== false ? (string)getenv('DB_USER') : 'root';
+  $pass = getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : '';
 
   $dsn = "mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4";
   $pdo = new PDO($dsn, $user, $pass, [
