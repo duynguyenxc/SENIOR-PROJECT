@@ -1,6 +1,7 @@
 # Veg Buffet
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-veg--buffet--web.onrender.com-2e7d32?style=for-the-badge)](https://veg-buffet-web.onrender.com/)
+[![User Manual](https://img.shields.io/badge/User%20Manual-docs-1d4ed8?style=for-the-badge)](https://duynguyenxc.github.io/SENIOR-PROJECT/)
 
 Veg Buffet is a web-based restaurant ordering system built as a senior project. The project focuses on a vegetarian restaurant workflow where customers can browse the weekly menu, place takeout orders, complete payment online, and check their order status, while staff and admin users manage the operational side of the system.
 

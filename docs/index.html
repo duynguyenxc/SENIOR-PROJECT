@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Veg Buffet — User Manual</title>
+  <link rel="stylesheet" href="assets/docs.css" />
+</head>
+<body>
+<div class="wrapper">
+
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="project-name">🥬 Veg Buffet</span>
+      <span class="project-sub">User Manual — Senior Project 2026</span>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Overview</div>
+      <a href="index.html" class="nav-link active">Introduction</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Dependencies</div>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="getting-started.html#requirements" class="nav-sub">System Requirements</a>
+      <a href="getting-started.html#dependencies" class="nav-sub">All Dependencies</a>
+      <a href="getting-started.html#installation" class="nav-sub">Local Setup (Docker)</a>
+      <a href="getting-started.html#database" class="nav-sub">Database Schema</a>
+      <a href="getting-started.html#stripe" class="nav-sub">Stripe Payment Setup</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Use</div>
+      <a href="user-guide.html" class="nav-link">User Guide</a>
+      <a href="user-guide.html#overview" class="nav-sub">UI Overview</a>
+      <a href="user-guide.html#customer" class="nav-sub">Customer</a>
+      <a href="user-guide.html#staff" class="nav-sub">Staff</a>
+      <a href="user-guide.html#superadmin" class="nav-sub">Super Admin</a>
+      <a href="user-guide.html#accessibility" class="nav-sub">Accessibility</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Administration</div>
+      <a href="administration.html" class="nav-link">Administration & Maintenance</a>
+      <a href="administration.html#routine" class="nav-sub">Routine Tasks</a>
+      <a href="administration.html#migration" class="nav-sub">Moving to a New Host</a>
+      <a href="administration.html#extend" class="nav-sub">Enhancements</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="https://veg-buffet-web.onrender.com/" target="_blank">↗ Live Demo</a>
+      <a href="https://github.com/duynguyenxc/SENIOR-PROJECT" target="_blank">↗ Source Code (GitHub)</a>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <div class="hero">
+      <h1>Veg Buffet — User Manual</h1>
+      <p class="hero-sub">
+        A complete guide to installing, using, and maintaining the Veg Buffet vegetarian restaurant ordering system.
+        Built as a senior capstone project.
+      </p>
+      <div class="hero-links">
+        <a href="getting-started.html" class="btn btn-primary">Get Started →</a>
+        <a href="https://veg-buffet-web.onrender.com/" target="_blank" class="btn btn-outline">View Live Demo ↗</a>
+      </div>
+    </div>
+
+    <h2 id="what-is-it">What Is Veg Buffet?</h2>
+    <p>
+      <strong>Veg Buffet</strong> is a web-based takeout ordering system for a vegetarian restaurant.
+      Customers browse a rotating weekly menu, place and pay for takeout orders online, then track their order status in real time.
+      On the restaurant side, staff and administrators use a separate internal portal to process orders, manage the menu, and review sales analytics.
+    </p>
+    <p>
+      The application is live at:
+      <strong><a href="https://veg-buffet-web.onrender.com/" target="_blank">https://veg-buffet-web.onrender.com/</a></strong>
+    </p>
+    <p>
+      Source code is hosted on GitHub. Clone or download it from:
+      <strong><a href="https://github.com/duynguyenxc/SENIOR-PROJECT" target="_blank">https://github.com/duynguyenxc/SENIOR-PROJECT/duynguyenxc/SENIOR-PROJECT</a></strong>
+    </p>
+
+    <div class="note note-info">
+      <div class="note-title">ℹ First Load Note</div>
+      The live site runs on Render's free tier. After a period of inactivity, the first request may take up to 60 seconds while the server wakes up. Subsequent requests are fast.
+    </div>
+
+    <h2 id="system-overview">What the System Does</h2>
+    <p>The application is split into two sides:</p>
+
+    <h3>Customer-Facing Side (public website)</h3>
+    <ul>
+      <li>Browse the weekly buffet menu organized by day</li>
+      <li>View available takeout sets with prices and descriptions</li>
+      <li>Create an account and log in</li>
+      <li>Add items to a cart and complete checkout with a chosen pickup time</li>
+      <li>Pay securely via Stripe (test/sandbox mode)</li>
+      <li>Receive order confirmation and track the order status in real time</li>
+      <li>View full order history from the account area</li>
+    </ul>
+
+    <h3>Internal Staff Portal (<code>/admin/</code>)</h3>
+    <ul>
+      <li><strong>Staff</strong> — view the live order queue, update order statuses, review history</li>
+      <li><strong>Super Admin</strong> — all staff capabilities plus: manage the weekly menu, manage takeout sets, create/disable staff accounts, view sales analytics</li>
+    </ul>
+
+    <h2 id="user-roles">User Roles</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Role</th><th>Access Area</th><th>Key Capabilities</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>Public website (<code>/</code>)</td>
+            <td>Browse menu, place orders, pay online, view order history</td>
+          </tr>
+          <tr>
+            <td><strong>Staff</strong></td>
+            <td>Internal portal (<code>/admin/</code>)</td>
+            <td>View order queue, advance order status (Preparing → Ready → Completed), view history</td>
+          </tr>
+          <tr>
+            <td><strong>Super Admin</strong></td>
+            <td>Internal portal (<code>/admin/</code>)</td>
+            <td>Everything staff can do, plus: menu management, takeout set management, staff account management, sales reports, cancel orders</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="tech-stack">Technology Stack</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Component</th><th>Technology</th><th>Version</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Backend language</td><td>PHP</td><td>8.3</td></tr>
+          <tr><td>Web server</td><td>Apache HTTP Server</td><td>2.4 (via official Docker image)</td></tr>
+          <tr><td>Database</td><td>MariaDB (MySQL-compatible)</td><td>11.4</td></tr>
+          <tr><td>Containerization</td><td>Docker + Docker Compose</td><td>Latest stable</td></tr>
+          <tr><td>Payment processing</td><td>Stripe Checkout</td><td>Test/sandbox mode</td></tr>
+          <tr><td>Production hosting</td><td>Render (Docker Web Service)</td><td>Free tier</td></tr>
+          <tr><td>Production database</td><td>TiDB Cloud (MySQL-compatible serverless)</td><td>Free tier</td></tr>
+          <tr><td>Database GUI (local)</td><td>phpMyAdmin</td><td>5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="navigate">Manual Sections</h2>
+    <div class="card-grid">
+      <a href="getting-started.html" class="card">
+        <div class="card-title">Dependencies &amp; Setup</div>
+        <div class="card-desc">System requirements, all dependencies, local installation, database schema, Stripe setup.</div>
+      </a>
+      <a href="user-guide.html" class="card">
+        <div class="card-title">User Guide</div>
+        <div class="card-desc">Step-by-step instructions for customers, staff, and super admin. Includes screenshots.</div>
+      </a>
+      <a href="administration.html" class="card">
+        <div class="card-title">Administration &amp; Maintenance</div>
+        <div class="card-desc">Routine tasks, database backup, moving to a new host, and future enhancement ideas.</div>
+      </a>
+    </div>
+
+  </main>
+</div>
+<script src="assets/scrollspy.js"></script>
+</body>
+</html>

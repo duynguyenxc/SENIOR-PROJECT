@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dependencies & Setup — Veg Buffet User Manual</title>
+  <link rel="stylesheet" href="assets/docs.css" />
+</head>
+<body>
+<div class="wrapper">
+
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="project-name">🥬 Veg Buffet</span>
+      <span class="project-sub">User Manual — Senior Project 2026</span>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Overview</div>
+      <a href="index.html" class="nav-link">Introduction</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Dependencies</div>
+      <a href="getting-started.html" class="nav-link active">Getting Started</a>
+      <a href="#requirements" class="nav-sub active">System Requirements</a>
+      <a href="#dependencies" class="nav-sub">All Dependencies</a>
+      <a href="#installation" class="nav-sub">Local Setup (Docker)</a>
+      <a href="#database" class="nav-sub">Database Schema</a>
+      <a href="#stripe" class="nav-sub">Stripe Payment Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Use</div>
+      <a href="user-guide.html" class="nav-link">User Guide</a>
+      <a href="user-guide.html#overview" class="nav-sub">UI Overview</a>
+      <a href="user-guide.html#customer" class="nav-sub">Customer</a>
+      <a href="user-guide.html#staff" class="nav-sub">Staff</a>
+      <a href="user-guide.html#superadmin" class="nav-sub">Super Admin</a>
+      <a href="user-guide.html#accessibility" class="nav-sub">Accessibility</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Administration</div>
+      <a href="administration.html" class="nav-link">Administration & Maintenance</a>
+      <a href="administration.html#routine" class="nav-sub">Routine Tasks</a>
+      <a href="administration.html#migration" class="nav-sub">Moving to a New Host</a>
+      <a href="administration.html#extend" class="nav-sub">Enhancements</a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="https://veg-buffet-web.onrender.com/" target="_blank">↗ Live Demo</a>
+      <a href="https://github.com/duynguyenxc/SENIOR-PROJECT" target="_blank">↗ Source Code (GitHub)</a>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <h1>Dependencies &amp; Setup</h1>
+    <p class="page-intro">
+      Everything you need to obtain, install, and run Veg Buffet on your own machine — from scratch.
+      Assumes you know nothing about the project beforehand.
+    </p>
+
+    <div class="note note-info">
+      <div class="note-title">ℹ Skip Setup — Use the Live Demo</div>
+      The application is already deployed at
+      <a href="https://veg-buffet-web.onrender.com/" target="_blank">https://veg-buffet-web.onrender.com/</a>.
+      If you only want to evaluate the running system, you can skip this section and go directly to the
+      <a href="user-guide.html">User Guide</a>.
+    </div>
+
+    <!-- ================================================================
+         WHERE TO GET THE CODE / WHERE IT IS HOSTED
+    ================================================================ -->
+    <h2 id="where-to-get">Where to Get the Code &amp; Where It Is Hosted</h2>
+
+    <h3>Live Hosted Application</h3>
+    <ul>
+      <li><strong>Public website:</strong> <a href="https://veg-buffet-web.onrender.com/" target="_blank">https://veg-buffet-web.onrender.com/</a></li>
+      <li><strong>Staff/Admin portal:</strong> <a href="https://veg-buffet-web.onrender.com/admin/login.php" target="_blank">https://veg-buffet-web.onrender.com/admin/login.php</a></li>
+      <li><strong>Hosted on:</strong> Render (Docker Web Service, free tier)</li>
+      <li><strong>Database hosted on:</strong> TiDB Cloud (MySQL-compatible serverless, free tier)</li>
+    </ul>
+
+    <h3>Source Code</h3>
+    <p>The full source code is available on GitHub:</p>
+    <pre><code>https://github.com/duynguyenxc/SENIOR-PROJECT/duynguyenxc/SENIOR-PROJECT</code></pre>
+    <p>To download it:</p>
+    <ul>
+      <li><strong>Option A — Clone with Git:</strong> <code>git clone https://github.com/duynguyenxc/SENIOR-PROJECT/duynguyenxc/SENIOR-PROJECT.git</code></li>
+      <li><strong>Option B — ZIP download:</strong> On GitHub, click the green <em>Code</em> button → <em>Download ZIP</em>, then extract.</li>
+    </ul>
+
+    <!-- ================================================================
+         SYSTEM REQUIREMENTS
+    ================================================================ -->
+    <h2 id="requirements">System Requirements</h2>
+    <p>
+      This project runs entirely inside Docker containers. You do <strong>not</strong> need to install
+      PHP, Apache, or MariaDB separately — Docker handles everything automatically.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Requirement</th><th>Minimum</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Operating System</strong></td>
+            <td>Windows 10/11, macOS 13+, or Ubuntu 22.04+</td>
+            <td>Any OS that supports Docker Desktop</td>
+          </tr>
+          <tr>
+            <td><strong>RAM</strong></td>
+            <td>4 GB</td>
+            <td>8 GB recommended for comfortable multitasking</td>
+          </tr>
+          <tr>
+            <td><strong>Disk Space</strong></td>
+            <td>2 GB free</td>
+            <td>For Docker images and the database data volume</td>
+          </tr>
+          <tr>
+            <td><strong>Internet</strong></td>
+            <td>Required on first run</td>
+            <td>Docker pulls the PHP and MariaDB images from Docker Hub on first startup</td>
+          </tr>
+          <tr>
+            <td><strong>Web Browser</strong></td>
+            <td>Any modern browser</td>
+            <td>Chrome, Firefox, Edge, or Safari (latest version)</td>
+          </tr>
+          <tr>
+            <td><strong>Specialized Hardware</strong></td>
+            <td>None required</td>
+            <td>Standard desktop or laptop computer is sufficient</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================================================================
+         ALL DEPENDENCIES
+    ================================================================ -->
+    <h2 id="dependencies">All Dependencies</h2>
+    <p>
+      The table below lists every software platform, language, tool, library, and service the application depends on.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Name</th><th>Version</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Language</strong></td>
+            <td>PHP</td>
+            <td>8.3</td>
+            <td>All server-side logic. Runs inside the Docker container via the official <code>php:8.3-apache</code> image.</td>
+          </tr>
+          <tr>
+            <td><strong>Web Server</strong></td>
+            <td>Apache HTTP Server</td>
+            <td>2.4</td>
+            <td>Serves PHP pages. Comes bundled in the official PHP Docker image. <code>mod_rewrite</code> is enabled.</td>
+          </tr>
+          <tr>
+            <td><strong>Database</strong></td>
+            <td>MariaDB</td>
+            <td>11.4</td>
+            <td>Relational database (fully MySQL-compatible). Runs in a separate Docker container. The production environment uses TiDB Cloud instead, which is also MySQL-compatible.</td>
+          </tr>
+          <tr>
+            <td><strong>PHP Extension</strong></td>
+            <td>pdo_mysql</td>
+            <td>(bundled)</td>
+            <td>PHP Data Objects driver for MySQL/MariaDB. Installed automatically in the Dockerfile.</td>
+          </tr>
+          <tr>
+            <td><strong>Containerization</strong></td>
+            <td>Docker Desktop</td>
+            <td>Latest stable</td>
+            <td>Runs the application, database, and phpMyAdmin as isolated containers using Docker Compose.</td>
+          </tr>
+          <tr>
+            <td><strong>Container Orchestration</strong></td>
+            <td>Docker Compose</td>
+            <td>v2 (included with Docker Desktop)</td>
+            <td>Defines and manages all three containers via <code>docker-compose.yml</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Payment Service</strong></td>
+            <td>Stripe Checkout</td>
+            <td>API v1 (latest)</td>
+            <td>Handles online payment. Integrated server-side via Stripe's PHP API (loaded via HTTP, no Composer required). Currently in test/sandbox mode.</td>
+          </tr>
+          <tr>
+            <td><strong>Database GUI</strong></td>
+            <td>phpMyAdmin</td>
+            <td>5</td>
+            <td>Browser-based database admin interface. Runs as a Docker container for local development only.</td>
+          </tr>
+          <tr>
+            <td><strong>Production Host</strong></td>
+            <td>Render</td>
+            <td>Docker Web Service</td>
+            <td>Hosts the PHP/Apache application container. Configuration defined in <code>render.yaml</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Production Database</strong></td>
+            <td>TiDB Cloud</td>
+            <td>Serverless (MySQL-compatible)</td>
+            <td>Cloud-hosted database for the live deployment. Connects over SSL.</td>
+          </tr>
+          <tr>
+            <td><strong>Version Control</strong></td>
+            <td>Git</td>
+            <td>Any recent version</td>
+            <td>Used to clone the repository and manage code changes.</td>
+          </tr>
+          <tr>
+            <td><strong>Frontend</strong></td>
+            <td>HTML, CSS, JavaScript</td>
+            <td>N/A (no build step)</td>
+            <td>Plain HTML served by PHP. CSS in <code>web/assets/style.css</code>, JS in <code>web/assets/app.js</code>. No frameworks or bundlers.</td>
+          </tr>
+          <tr>
+            <td><strong>External Libraries</strong></td>
+            <td>Stripe PHP SDK</td>
+            <td>Bundled in <code>web/lib/payment.php</code></td>
+            <td>Makes API calls to Stripe for session creation and payment verification. Loaded via <code>require</code>, no Composer used.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>No Build Step Required</h3>
+    <p>
+      There is no compilation, transpilation, or linking step.
+      PHP is interpreted at runtime. CSS and JavaScript are plain files served directly.
+      The only "build" step is running <code>docker compose up --build</code>, which assembles the Docker image from the <code>Dockerfile</code>.
+    </p>
+
+    <!-- ================================================================
+         LOCAL INSTALLATION
+    ================================================================ -->
+    <h2 id="installation">Local Installation — Step by Step</h2>
+
+    <h3>Software to Install First</h3>
+    <p>Install these two tools before proceeding. No other software installation is needed.</p>
+
+    <h4>1. Docker Desktop</h4>
+    <ul>
+      <li>Download: <a href="https://www.docker.com/products/docker-desktop/" target="_blank">docker.com/products/docker-desktop</a></li>
+      <li>Install with default options. On Windows, accept the WSL 2 prompt if shown.</li>
+      <li>After installation, open Docker Desktop and wait until it says <em>"Docker Desktop is running"</em> before proceeding.</li>
+    </ul>
+
+    <div class="note note-warn">
+      <div class="note-title">⚠ Docker Desktop must be running</div>
+      Docker Desktop must be open and running in the background at all times while the application is running.
+      If it is not running, all commands below will fail.
+    </div>
+
+    <h4>2. Git (for cloning)</h4>
+    <ul>
+      <li><strong>Windows:</strong> <a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a> — install with default options</li>
+      <li><strong>macOS:</strong> Run <code>git --version</code> in Terminal; macOS will prompt you to install it if not present</li>
+      <li><strong>Ubuntu/Linux:</strong> <code>sudo apt install git</code></li>
+    </ul>
+    <p>If you downloaded the ZIP file instead of cloning, Git is not required.</p>
+
+    <hr />
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Get the Project Code</h3>
+          <p>Open a terminal (Command Prompt or PowerShell on Windows; Terminal on macOS/Linux) and run:</p>
+          <div class="code-filename">Terminal</div>
+          <pre><code>git clone https://github.com/duynguyenxc/SENIOR-PROJECT/duynguyenxc/SENIOR-PROJECT.git
+cd Senior-Project</code></pre>
+          <p>Or if you downloaded the ZIP: extract it and navigate into the folder with <code>cd Senior-Project</code>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Create the Environment Configuration File</h3>
+          <p>
+            The application reads private settings (like API keys) from a file called <code>.env</code>.
+            This file is not included in the repository and must be created manually.
+          </p>
+          <p>
+            In the project root folder (same folder that contains <code>docker-compose.yml</code>),
+            create a new file named <code>.env</code> with the following content:
+          </p>
+          <div class="code-filename">.env (create this file in the project root)</div>
+          <pre><code>APP_URL=http://localhost:8080
+STRIPE_SECRET_KEY=sk_test_YOUR_KEY_HERE
+STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_HERE</code></pre>
+          <p>
+            Replace <code>sk_test_YOUR_KEY_HERE</code> and <code>pk_test_YOUR_KEY_HERE</code> with your Stripe test keys.
+            See the <a href="#stripe">Stripe Setup</a> section for how to obtain them.
+          </p>
+          <div class="note note-info">
+            <div class="note-title">ℹ Running Without Stripe Keys</div>
+            You can leave the Stripe keys as placeholder text to run the app without payment functionality.
+            Everything except the actual checkout step will work normally.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Start the Application</h3>
+          <p>Make sure Docker Desktop is running, then from inside the <code>Senior-Project</code> folder, run:</p>
+          <div class="code-filename">Terminal (run from the project root)</div>
+          <pre><code>docker compose up --build</code></pre>
+          <p>This single command automatically:</p>
+          <ul>
+            <li>Downloads the PHP 8.3 + Apache Docker image (first run: takes a few minutes)</li>
+            <li>Downloads the MariaDB 11.4 Docker image (first run: takes a few minutes)</li>
+            <li>Builds the web container from <code>web/Dockerfile</code></li>
+            <li>Creates the <code>vegbuffet</code> database and runs the schema + seed SQL files</li>
+            <li>Starts three containers: the web app, the database, and phpMyAdmin</li>
+          </ul>
+          <p>The application is ready when you see output similar to:</p>
+          <pre><code>db-1   | [Note] mariadbd: ready for connections.
+web-1  | AH00558: apache2: Could not reliably determine the server's ...
+web-1  | AH00292: Apache/2.4.x (Debian) ... configured -- resuming normal operations</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Open the Application</h3>
+          <p>Open a web browser and navigate to:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Service</th><th>URL</th></tr></thead>
+              <tbody>
+                <tr><td>Customer Website</td><td><a href="http://localhost:8080" target="_blank">http://localhost:8080</a></td></tr>
+                <tr><td>Staff / Admin Portal</td><td><a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></td></tr>
+                <tr><td>Database GUI (phpMyAdmin)</td><td><a href="http://localhost:8081" target="_blank">http://localhost:8081</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Log In</h3>
+          <p>A default Super Admin account is created automatically from the seed data. Use it to log into the staff portal:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>URL</td><td><a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></td></tr>
+                <tr><td>Email</td><td><code>admin@vegbuffet.com</code></td></tr>
+                <tr><td>Password</td><td><code>password</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note note-warn">
+            <div class="note-title">⚠ Change the Default Password</div>
+            The seed data sets the admin password to <code>password</code> for local development convenience.
+            Do not use this password in a production deployment.
+          </div>
+          <p>To test the customer experience, create a new customer account at:</p>
+          <pre><code>http://localhost:8080/register.php</code></pre>
+          <p>Customer accounts and staff/admin accounts are completely separate systems.</p>
+        </div>
+      </div>
+
+    </div><!-- /steps -->
+
+    <h3>Stopping the Application</h3>
+    <p>Press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal to stop the containers. To remove containers but keep data:</p>
+    <pre><code>docker compose down</code></pre>
+    <p>To completely reset everything (all data deleted):</p>
+    <pre><code>docker compose down -v</code></pre>
+
+    <!-- ================================================================
+         CONFIGURATION REFERENCE
+    ================================================================ -->
+    <h2 id="configuration">Configuration Reference</h2>
+    <p>
+      All local configuration lives in the <code>.env</code> file in the project root.
+      Database credentials are already set in <code>docker-compose.yml</code> and do not need to be in <code>.env</code> for local development.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>APP_URL</code></td>
+            <td><code>http://localhost:8080</code></td>
+            <td>Base URL of the app. Must match what you type in the browser. Used to build Stripe's redirect URL after payment.</td>
+          </tr>
+          <tr>
+            <td><code>STRIPE_SECRET_KEY</code></td>
+            <td>(empty)</td>
+            <td>Your Stripe secret key. Starts with <code>sk_test_</code> for test mode. Required for payment to work.</td>
+          </tr>
+          <tr>
+            <td><code>STRIPE_PUBLISHABLE_KEY</code></td>
+            <td>(empty)</td>
+            <td>Your Stripe publishable key. Starts with <code>pk_test_</code> for test mode.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Project File Structure</h3>
+    <pre><code>Senior-Project/
+├── docker-compose.yml     ← Defines the 3 containers (web, db, phpmyadmin)
+├── .env                   ← Your private config (you create this file)
+├── render.yaml            ← Render deployment config
+├── db/
+│   └── init/
+│       ├── 01_schema.sql  ← Creates all database tables
+│       └── 02_seed.sql    ← Inserts initial data + admin account
+└── web/
+    ├── Dockerfile         ← Builds the PHP/Apache container
+    ├── index.php          ← Homepage
+    ├── menu.php           ← Weekly menu
+    ├── takeout.php        ← Takeout ordering
+    ├── cart.php           ← Cart
+    ├── checkout.php       ← Checkout form
+    ├── pay.php            ← Initiates Stripe payment
+    ├── success.php        ← Post-payment confirmation
+    ├── register.php       ← Customer registration
+    ├── login.php          ← Customer login
+    ├── my_orders.php      ← Customer order history
+    ├── admin/
+    │   ├── login.php      ← Staff login
+    │   ├── index.php      ← Order fulfillment queue (staff + admin)
+    │   ├── history.php    ← Order history
+    │   ├── menu.php       ← Menu management (SuperAdmin only)
+    │   ├── takeout.php    ← Takeout set management (SuperAdmin only)
+    │   ├── staff.php      ← Staff account management (SuperAdmin only)
+    │   └── reports.php    ← Sales analytics (SuperAdmin only)
+    ├── lib/               ← Shared PHP business logic
+    │   ├── auth.php       ← Login, sessions, role checks
+    │   ├── db.php         ← PDO database connection
+    │   ├── orders.php     ← Order creation, status updates
+    │   ├── payment.php    ← Stripe integration
+    │   ├── reporting.php  ← Sales report queries
+    │   ├── menu_catalog.php
+    │   ├── takeout_catalog.php
+    │   ├── staff.php
+    │   ├── upload.php     ← Image upload handling
+    │   └── layout.php     ← Shared HTML header/footer
+    ├── assets/
+    │   ├── style.css      ← Application styles
+    │   └── app.js         ← Client-side JavaScript
+    └── uploads/           ← User-uploaded images</code></pre>
+
+    <!-- ================================================================
+         DATABASE SCHEMA
+    ================================================================ -->
+    <h2 id="database">Database Schema</h2>
+
+    <h3>Database Engine &amp; Name</h3>
+    <ul>
+      <li><strong>Engine:</strong> MariaDB 11.4 (MySQL-compatible, InnoDB storage engine)</li>
+      <li><strong>Database name:</strong> <code>vegbuffet</code></li>
+      <li><strong>Initialization:</strong> When Docker starts for the first time, it automatically runs <code>db/init/01_schema.sql</code> (creates tables) and <code>db/init/02_seed.sql</code> (inserts initial data). No manual setup is needed.</li>
+    </ul>
+
+    <h3>Entity-Relationship Diagram</h3>
+    <figure>
+      <img src="assets/erd.png" alt="Entity-Relationship Diagram showing all 8 tables and their foreign key relationships" />
+      <figcaption>Figure 1 — Database ERD. Shows all 8 tables and the foreign key relationships between them.</figcaption>
+    </figure>
+
+    <h3>Table Descriptions</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Table</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Admin</code></td><td>Staff and Super Admin accounts. <code>role</code> is either <code>'Staff'</code> or <code>'SuperAdmin'</code>. <code>isActive</code> flag disables access without deleting the account.</td></tr>
+          <tr><td><code>Customer</code></td><td>Registered customer accounts. Separate from Admin — no shared login.</td></tr>
+          <tr><td><code>Day</code></td><td>The 7 days of the week (Monday–Sunday) with a sort order. Static; not editable through the UI.</td></tr>
+          <tr><td><code>Dish</code></td><td>All dishes that can appear on the weekly menu. Reusable across multiple days.</td></tr>
+          <tr><td><code>DayMenuItem</code></td><td>Many-to-many join table linking dishes to days, forming the weekly menu.</td></tr>
+          <tr><td><code>TakeoutSet</code></td><td>Predefined takeout boxes customers can order. <code>allowsCustomSelection</code> marks sets where customers enter their own dish list.</td></tr>
+          <tr><td><code>Order</code></td><td>One record per customer order. Stores customer info, pickup time, total, special instructions, and current status.</td></tr>
+          <tr><td><code>OrderItem</code></td><td>Individual line items within an order (one row per set chosen).</td></tr>
+          <tr><td><code>Payment</code></td><td>One-to-one with Order. Stores the Stripe session ID and payment status.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Order Status Lifecycle</h3>
+    <p>The <code>status</code> column in the <code>Order</code> table moves through the following values:</p>
+    <div class="flow">
+      <span class="flow-step">Pending</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Paid</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Preparing</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Ready</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Completed</span>
+    </div>
+    <ul>
+      <li><strong>Pending</strong> — order created, awaiting Stripe payment confirmation</li>
+      <li><strong>Paid</strong> — Stripe confirmed payment; order appears in the staff queue</li>
+      <li><strong>Preparing</strong> — staff started preparing the order</li>
+      <li><strong>Ready</strong> — order is packed, ready for customer pickup</li>
+      <li><strong>Completed</strong> — customer has picked up the order</li>
+      <li><strong>Cancelled</strong> — cancelled by Super Admin, or payment was abandoned</li>
+    </ul>
+
+    <h3>Full SQL CREATE Statements (<code>db/init/01_schema.sql</code>)</h3>
+    <p>These are the exact SQL statements that create the database structure:</p>
+
+    <pre><code><span class="kw">CREATE TABLE IF NOT EXISTS</span> Admin (
+  adminId       <span class="kw">INT</span>          <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  email         <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  passwordHash  <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  role          <span class="kw">VARCHAR</span>(<span class="num">32</span>)  <span class="kw">NOT NULL DEFAULT</span> <span class="str">'Staff'</span>,
+  isActive      <span class="kw">BOOLEAN</span>      <span class="kw">NOT NULL DEFAULT</span> <span class="num">1</span>,
+  createdTime   <span class="kw">DATETIME</span>     <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (adminId),
+  <span class="kw">UNIQUE KEY</span> uq_admin_email (email)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> Customer (
+  customerId   <span class="kw">INT</span>          <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  email        <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  passwordHash <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  fullName     <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  phone        <span class="kw">VARCHAR</span>(<span class="num">64</span>)  <span class="kw">NULL</span>,
+  createdTime  <span class="kw">DATETIME</span>     <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (customerId),
+  <span class="kw">UNIQUE KEY</span> uq_customer_email (email)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> Day (
+  dayId     <span class="kw">INT</span>         <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  dayName   <span class="kw">VARCHAR</span>(<span class="num">32</span>) <span class="kw">NOT NULL</span>,
+  sortOrder <span class="kw">INT</span>         <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (dayId),
+  <span class="kw">UNIQUE KEY</span> uq_day_name (dayName),
+  <span class="kw">UNIQUE KEY</span> uq_day_sort (sortOrder)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> Dish (
+  dishId      <span class="kw">INT</span>           <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  dishName    <span class="kw">VARCHAR</span>(<span class="num">255</span>)  <span class="kw">NOT NULL</span>,
+  description <span class="kw">TEXT</span>          <span class="kw">NULL</span>,
+  imageUrl    <span class="kw">VARCHAR</span>(<span class="num">2048</span>) <span class="kw">NULL</span>,
+  isActive    <span class="kw">BOOLEAN</span>       <span class="kw">NOT NULL DEFAULT</span> <span class="num">1</span>,
+  <span class="kw">PRIMARY KEY</span> (dishId),
+  <span class="kw">UNIQUE KEY</span> uq_dish_name (dishName)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> DayMenuItem (
+  dayMenuItemId <span class="kw">INT</span> <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  dayId         <span class="kw">INT</span> <span class="kw">NOT NULL</span>,
+  dishId        <span class="kw">INT</span> <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (dayMenuItemId),
+  <span class="kw">UNIQUE KEY</span> uq_day_dish (dayId, dishId),
+  <span class="kw">CONSTRAINT</span> fk_daymenu_day
+    <span class="kw">FOREIGN KEY</span> (dayId) <span class="kw">REFERENCES</span> Day(dayId)
+    <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>,
+  <span class="kw">CONSTRAINT</span> fk_daymenu_dish
+    <span class="kw">FOREIGN KEY</span> (dishId) <span class="kw">REFERENCES</span> Dish(dishId)
+    <span class="kw">ON DELETE RESTRICT ON UPDATE CASCADE</span>
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> TakeoutSet (
+  setId                 <span class="kw">INT</span>            <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  setName               <span class="kw">VARCHAR</span>(<span class="num">255</span>)   <span class="kw">NOT NULL</span>,
+  description           <span class="kw">VARCHAR</span>(<span class="num">1024</span>)  <span class="kw">NOT NULL</span>,
+  price                 <span class="kw">DECIMAL</span>(<span class="num">10,2</span>) <span class="kw">NOT NULL</span>,
+  imageUrl              <span class="kw">VARCHAR</span>(<span class="num">2048</span>)  <span class="kw">NULL</span>,
+  isAvailable           <span class="kw">BOOLEAN</span>        <span class="kw">NOT NULL</span>,
+  sortOrder             <span class="kw">INT</span>            <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  allowsCustomSelection <span class="kw">BOOLEAN</span>        <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  selectionLimit        <span class="kw">INT</span>            <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  <span class="kw">PRIMARY KEY</span> (setId),
+  <span class="kw">UNIQUE KEY</span> uq_set_name (setName)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> `Order` (
+  orderId             <span class="kw">INT</span>            <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  dailyOrderNumber    <span class="kw">INT</span>            <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  customerId          <span class="kw">INT</span>            <span class="kw">NULL</span>,
+  customerName        <span class="kw">VARCHAR</span>(<span class="num">255</span>)   <span class="kw">NOT NULL</span>,
+  customerPhone       <span class="kw">VARCHAR</span>(<span class="num">64</span>)    <span class="kw">NOT NULL</span>,
+  pickupTime          <span class="kw">DATETIME</span>       <span class="kw">NOT NULL</span>,
+  status              <span class="kw">VARCHAR</span>(<span class="num">32</span>)    <span class="kw">NOT NULL</span>,
+  totalAmount         <span class="kw">DECIMAL</span>(<span class="num">10,2</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="num">0.00</span>,
+  specialInstructions <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
+  allergyNotes        <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
+  createdTime         <span class="kw">DATETIME</span>       <span class="kw">NOT NULL</span>,
+  updatedTime         <span class="kw">DATETIME</span>       <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (orderId),
+  <span class="kw">KEY</span> idx_order_customer (customerId),
+  <span class="kw">KEY</span> idx_order_status (status),
+  <span class="kw">KEY</span> idx_order_created (createdTime),
+  <span class="kw">KEY</span> idx_order_pickup (pickupTime)
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> OrderItem (
+  orderItemId     <span class="kw">INT</span>            <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  orderId         <span class="kw">INT</span>            <span class="kw">NOT NULL</span>,
+  setId           <span class="kw">INT</span>            <span class="kw">NULL</span>,
+  lineType        <span class="kw">VARCHAR</span>(<span class="num">32</span>)    <span class="kw">NOT NULL DEFAULT</span> <span class="str">'set'</span>,
+  lineLabel       <span class="kw">VARCHAR</span>(<span class="num">255</span>)   <span class="kw">NOT NULL</span>,
+  unitPrice       <span class="kw">DECIMAL</span>(<span class="num">10,2</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="num">0.00</span>,
+  lineDescription <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
+  lineNotes       <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
+  imageUrl        <span class="kw">VARCHAR</span>(<span class="num">2048</span>)  <span class="kw">NULL</span>,
+  quantity        <span class="kw">INT</span>            <span class="kw">NOT NULL</span>,
+  <span class="kw">PRIMARY KEY</span> (orderItemId),
+  <span class="kw">CONSTRAINT</span> fk_orderitem_order
+    <span class="kw">FOREIGN KEY</span> (orderId) <span class="kw">REFERENCES</span> `Order`(orderId)
+    <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>,
+  <span class="kw">CONSTRAINT</span> fk_orderitem_set
+    <span class="kw">FOREIGN KEY</span> (setId) <span class="kw">REFERENCES</span> TakeoutSet(setId)
+    <span class="kw">ON DELETE SET NULL ON UPDATE CASCADE</span>
+) <span class="kw">ENGINE</span>=InnoDB;
+
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> Payment (
+  paymentId     <span class="kw">INT</span>          <span class="kw">NOT NULL AUTO_INCREMENT</span>,
+  orderId       <span class="kw">INT</span>          <span class="kw">NOT NULL</span>,
+  paymentStatus <span class="kw">VARCHAR</span>(<span class="num">64</span>)  <span class="kw">NOT NULL</span>,
+  referenceId   <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>, <span class="cmt">-- Stripe session ID</span>
+  <span class="kw">PRIMARY KEY</span> (paymentId),
+  <span class="kw">UNIQUE KEY</span> uq_payment_reference (referenceId),
+  <span class="kw">UNIQUE KEY</span> uq_payment_order (orderId),
+  <span class="kw">CONSTRAINT</span> fk_payment_order
+    <span class="kw">FOREIGN KEY</span> (orderId) <span class="kw">REFERENCES</span> `Order`(orderId)
+    <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>
+) <span class="kw">ENGINE</span>=InnoDB;</code></pre>
+
+    <h3>Accessing the Database with phpMyAdmin (Local)</h3>
+    <p>When running locally, you can inspect and manage the database at <a href="http://localhost:8081" target="_blank">http://localhost:8081</a>.</p>
+    <ul>
+      <li><strong>Username:</strong> <code>app</code></li>
+      <li><strong>Password:</strong> <code>apppass</code></li>
+      <li><strong>Database:</strong> <code>vegbuffet</code></li>
+    </ul>
+
+    <!-- ================================================================
+         STRIPE SETUP
+    ================================================================ -->
+    <h2 id="stripe">Stripe Payment Setup</h2>
+    <p>
+      Veg Buffet uses <strong>Stripe Checkout</strong> for payment processing, currently in <strong>test/sandbox mode</strong>
+      — no real money is ever charged. To enable the payment flow locally:
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Create a Free Stripe Account</h3>
+          <p>Go to <a href="https://stripe.com" target="_blank">stripe.com</a> and sign up. No credit card needed.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Get Your Test API Keys</h3>
+          <p>In the Stripe dashboard, go to <strong>Developers → API Keys</strong>. Copy both keys:</p>
+          <ul>
+            <li>Publishable key — starts with <code>pk_test_</code></li>
+            <li>Secret key — starts with <code>sk_test_</code> (click "Reveal" to see it)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Add Keys to Your .env File</h3>
+          <pre><code>STRIPE_SECRET_KEY=sk_test_51...
+STRIPE_PUBLISHABLE_KEY=pk_test_51...</code></pre>
+          <p>Restart the containers after changing <code>.env</code>:</p>
+          <pre><code>docker compose down
+docker compose up</code></pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Test Card Details</h3>
+          <p>When prompted to enter a card during checkout, use these test values:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td>Card number</td><td><code>4242 4242 4242 4242</code></td></tr>
+                <tr><td>Expiry date</td><td>Any future date (e.g., <code>12/29</code>)</td></tr>
+                <tr><td>CVC</td><td>Any 3 digits (e.g., <code>123</code>)</td></tr>
+                <tr><td>Name / ZIP</td><td>Any value</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>No real charge will be made.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="assets/scrollspy.js"></script>
+</body>
+</html>

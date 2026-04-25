@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administration & Maintenance — Veg Buffet User Manual</title>
+  <link rel="stylesheet" href="assets/docs.css" />
+</head>
+<body>
+<div class="wrapper">
+
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="project-name">🥬 Veg Buffet</span>
+      <span class="project-sub">User Manual — Senior Project 2026</span>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Overview</div>
+      <a href="index.html" class="nav-link">Introduction</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Dependencies</div>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="getting-started.html#requirements" class="nav-sub">System Requirements</a>
+      <a href="getting-started.html#dependencies" class="nav-sub">All Dependencies</a>
+      <a href="getting-started.html#installation" class="nav-sub">Local Setup (Docker)</a>
+      <a href="getting-started.html#database" class="nav-sub">Database Schema</a>
+      <a href="getting-started.html#stripe" class="nav-sub">Stripe Payment Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Use</div>
+      <a href="user-guide.html" class="nav-link">User Guide</a>
+      <a href="user-guide.html#overview" class="nav-sub">UI Overview</a>
+      <a href="user-guide.html#customer" class="nav-sub">Customer</a>
+      <a href="user-guide.html#staff" class="nav-sub">Staff</a>
+      <a href="user-guide.html#superadmin" class="nav-sub">Super Admin</a>
+      <a href="user-guide.html#accessibility" class="nav-sub">Accessibility</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Administration</div>
+      <a href="administration.html" class="nav-link active">Administration & Maintenance</a>
+      <a href="#routine" class="nav-sub active">Routine Tasks</a>
+      <a href="#backup" class="nav-sub">Database Backup</a>
+      <a href="#migration" class="nav-sub">Moving to a New Host</a>
+      <a href="#extend" class="nav-sub">Enhancements</a>
+      <a href="#limitations" class="nav-sub">Known Limitations</a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="https://veg-buffet-web.onrender.com/" target="_blank">↗ Live Demo</a>
+      <a href="https://github.com/duynguyenxc/SENIOR-PROJECT" target="_blank">↗ Source Code (GitHub)</a>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <h1>Administration &amp; Maintenance</h1>
+    <p class="page-intro">
+      This section covers routine operational tasks that are not part of the day-to-day use described in the User Guide,
+      what is needed to move the application to a new hosting provider,
+      and suggestions for future enhancements.
+    </p>
+
+    <!-- ================================================================
+         ROUTINE TASKS
+    ================================================================ -->
+    <h2 id="routine">Routine Operational Tasks</h2>
+
+    <h3 id="routine-menu">Updating the Weekly Menu</h3>
+    <p>
+      The weekly menu should be updated at the start of each week (or whenever the restaurant changes its offerings).
+      Only the Super Admin can do this.
+    </p>
+    <ol>
+      <li>Log in to the staff portal as Super Admin.</li>
+      <li>Go to <strong>Menu Builder</strong>.</li>
+      <li>Click each day that needs updating.</li>
+      <li>Click <strong>Remove</strong> next to any dish that is no longer served on that day.</li>
+      <li>Use the <em>Add Dish to Menu</em> form to add any new dishes for the week.</li>
+    </ol>
+    <p>Changes take effect immediately — customers who reload the Menu page will see the updated menu.</p>
+
+    <h3 id="routine-takeout">Updating Takeout Sets</h3>
+    <p>
+      If a takeout set is temporarily unavailable (e.g., ingredients out of stock), toggle it to <strong>Unavailable</strong>
+      from the <strong>Takeout Sets</strong> page. Unavailable sets are hidden from customers automatically.
+      Toggle it back to <strong>Available</strong> when it returns to the menu.
+    </p>
+    <p>
+      If prices change, go to <strong>Takeout Sets</strong>, click <strong>Edit</strong> on the set, update the price, and save.
+    </p>
+
+    <h3 id="routine-staff">Managing Staff Accounts</h3>
+    <p>
+      When a new staff member joins: go to <strong>Manage Staff → Create Staff Account</strong>,
+      enter their email and a temporary password, and click <strong>Create Staff</strong>.
+      Share the credentials with them securely.
+    </p>
+    <p>
+      When a staff member leaves: click <strong>Disable</strong> next to their account.
+      This immediately revokes their access without deleting the account record.
+    </p>
+    <p>
+      If a staff member forgets their password: click <strong>Reset Password</strong>, set a new temporary password,
+      and share it with them.
+    </p>
+
+    <h3 id="routine-stale">Cleaning Up Abandoned Orders</h3>
+    <p>
+      Sometimes a customer starts the checkout process but closes the browser before completing payment.
+      These orders remain in <strong>Pending</strong> status and never appear in the staff queue
+      (only <strong>Paid</strong> orders are shown in the queue).
+    </p>
+    <p>
+      The system automatically cancels stale Pending orders when the Super Admin visits the
+      <strong>Reports</strong> page. This triggers the <code>cancel_stale_pending_orders()</code> function,
+      which marks orders as Cancelled if they have been in Pending status beyond a timeout threshold.
+    </p>
+    <p>
+      <strong>Recommended practice:</strong> the Super Admin should visit the Reports page at least once per week
+      to trigger this cleanup automatically.
+    </p>
+
+    <h3 id="routine-uploads">Managing Uploaded Images</h3>
+    <p>
+      Dish and takeout set images are stored in the <code>web/uploads/</code> directory:
+    </p>
+    <ul>
+      <li><code>web/uploads/dishes/</code> — dish images uploaded via Menu Builder</li>
+      <li><code>web/uploads/takeout/</code> — takeout set images uploaded via Takeout Sets</li>
+    </ul>
+    <p>
+      Locally (Docker): the <code>web/</code> folder is a mounted volume, so uploaded files persist between container restarts.
+    </p>
+    <p>
+      On Render (production): the filesystem is <strong>ephemeral</strong> — uploaded files are lost every time the server restarts or redeploys.
+      See the <a href="#migration">Migration</a> section for the recommended fix (persistent object storage).
+    </p>
+
+    <!-- ================================================================
+         DATABASE BACKUP
+    ================================================================ -->
+    <h2 id="backup">Database Backup and Restore</h2>
+
+    <h3>Local Backup via phpMyAdmin</h3>
+    <ol>
+      <li>Open phpMyAdmin at <a href="http://localhost:8081" target="_blank">http://localhost:8081</a>.</li>
+      <li>Select the <code>vegbuffet</code> database from the left panel.</li>
+      <li>Click the <strong>Export</strong> tab at the top of the page.</li>
+      <li>Leave format as <strong>SQL</strong> and click <strong>Export</strong>.</li>
+      <li>A <code>.sql</code> file is downloaded. Store it in a safe location.</li>
+    </ol>
+
+    <h3>Local Backup via Command Line</h3>
+    <p>With the Docker containers running, run this command in a terminal:</p>
+    <pre><code>docker exec senior-project-db-1 \
+  mysqldump -u app -papppass vegbuffet > backup.sql</code></pre>
+    <p>This saves a complete backup as <code>backup.sql</code> in your current directory.</p>
+
+    <h3>Restoring from a Backup</h3>
+    <pre><code>docker exec -i senior-project-db-1 \
+  mysql -u app -papppass vegbuffet &lt; backup.sql</code></pre>
+
+    <h3>Production Database (TiDB Cloud)</h3>
+    <p>
+      TiDB Cloud provides automated backups from the cluster dashboard. To create a manual backup:
+      log into <a href="https://tidbcloud.com" target="_blank">tidbcloud.com</a> → your cluster →
+      <strong>Backup</strong> → <strong>Create Backup</strong>.
+    </p>
+    <p>
+      To export via command line, use <code>mysqldump</code> with the TiDB Cloud connection string found in the cluster dashboard.
+      The connection requires SSL and a specific port (typically 4000).
+    </p>
+
+    <!-- ================================================================
+         MIGRATION
+    ================================================================ -->
+    <h2 id="migration">Moving to a New Hosting Provider</h2>
+
+    <h3>Current Hosting Setup</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Service</th><th>Provider</th><th>Plan</th></tr></thead>
+        <tbody>
+          <tr><td>Web application</td><td>Render (Docker Web Service)</td><td>Free tier</td></tr>
+          <tr><td>Database</td><td>TiDB Cloud (MySQL-compatible serverless)</td><td>Free tier</td></tr>
+          <tr><td>Payment processing</td><td>Stripe Checkout</td><td>Test/sandbox mode</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note note-warn">
+      <div class="note-title">⚠ Free tier limitations</div>
+      <ul style="margin: 0;">
+        <li><strong>Render free tier</strong> — the web server spins down after 15 minutes of inactivity. The first request after inactivity takes 30–60 seconds to load.</li>
+        <li><strong>TiDB Cloud free tier</strong> — the database hibernates after 7 days without activity. Free storage is capped at 5 GB.</li>
+      </ul>
+      For a production environment, upgrade both to paid tiers or migrate to alternative providers.
+    </div>
+
+    <h3>What Is Needed to Migrate</h3>
+    <p>
+      Because the application is fully containerized with Docker, it can be moved to any hosting provider
+      that supports Docker containers: AWS ECS, DigitalOcean App Platform, Railway, Fly.io, a self-managed VPS, etc.
+    </p>
+
+    <h4>Web Server Requirements on the New Host</h4>
+    <ul>
+      <li>Docker support (ability to run a custom Docker image)</li>
+      <li>Ability to set environment variables</li>
+      <li>Port 80 or 443 exposed to the public</li>
+      <li>Persistent storage volume for uploaded images (or external object storage — see below)</li>
+    </ul>
+
+    <h4>Database Requirements on the New Host</h4>
+    <ul>
+      <li>Any MySQL 8.0+ or MariaDB 10.6+ compatible database server</li>
+      <li>The schema from <code>db/init/01_schema.sql</code> must be applied to the new database</li>
+      <li>Optionally import a data backup from the old database</li>
+    </ul>
+
+    <h3>Step-by-Step Migration Guide</h3>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Export Data from TiDB Cloud (Current Database)</h3>
+          <p>Using a MySQL client, connect to TiDB Cloud and export:</p>
+          <pre><code>mysqldump \
+  --host=&lt;tidb-host&gt; \
+  --port=4000 \
+  --user=&lt;username&gt; \
+  --password \
+  --ssl-mode=REQUIRED \
+  vegbuffet > full-backup.sql</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Create the Database on the New Host</h3>
+          <p>Create a database named <code>vegbuffet</code> (or any name; update the env var <code>DB_NAME</code> accordingly).</p>
+          <p>Import the backup:</p>
+          <pre><code>mysql -h &lt;new-db-host&gt; -u &lt;user&gt; -p vegbuffet &lt; full-backup.sql</code></pre>
+          <p>If starting fresh (no data to migrate), just apply the schema and seed files:</p>
+          <pre><code>mysql -h &lt;new-db-host&gt; -u &lt;user&gt; -p vegbuffet &lt; db/init/01_schema.sql
+mysql -h &lt;new-db-host&gt; -u &lt;user&gt; -p vegbuffet &lt; db/init/02_seed.sql</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Deploy the Application Container</h3>
+          <p>
+            Deploy the Docker image from <code>web/Dockerfile</code> to the new hosting platform.
+            Set the following environment variables on the new host:
+          </p>
+          <pre><code>DB_HOST=&lt;new-database-host&gt;
+DB_PORT=3306
+DB_NAME=vegbuffet
+DB_USER=&lt;db-username&gt;
+DB_PASS=&lt;db-password&gt;
+APP_URL=https://&lt;your-new-domain&gt;
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...</code></pre>
+          <p>
+            If the new database requires SSL (like TiDB Cloud), also set:
+          </p>
+          <pre><code>DB_SSL_CA_PATH=/etc/ssl/certs/ca-certificates.crt
+DB_SSL_VERIFY_SERVER_CERT=true</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Update APP_URL</h3>
+          <p>
+            Set <code>APP_URL</code> to the new public URL of the application.
+            This value is used to build Stripe's redirect URL after payment.
+            If it is wrong, customers will be sent back to the old domain after paying.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Set Up Persistent Image Storage (Strongly Recommended)</h3>
+          <p>
+            On Render (and most Docker cloud platforms), the local filesystem is ephemeral —
+            uploaded files disappear when the container restarts.
+          </p>
+          <p>The recommended solution is to use object storage such as:</p>
+          <ul>
+            <li><a href="https://aws.amazon.com/s3/" target="_blank">Amazon S3</a></li>
+            <li><a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank">Cloudflare R2</a> (no egress fees on free tier)</li>
+          </ul>
+          <p>This requires modifying <code>web/lib/upload.php</code> to upload files to the bucket instead of the local filesystem, and updating stored <code>imageUrl</code> values to point to the bucket's public URL.</p>
+          <p>
+            As a simpler temporary workaround: always re-upload images after a server restart using the admin interface.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /steps -->
+
+    <!-- ================================================================
+         ENHANCEMENTS
+    ================================================================ -->
+    <h2 id="extend">Enhancing and Extending the Project</h2>
+    <p>
+      The following improvements are not currently implemented but represent logical next steps
+      for taking this project further in a real production environment.
+    </p>
+
+    <h3>1. Switch Stripe to Live Mode (Real Payments)</h3>
+    <p>
+      The current setup uses Stripe in test/sandbox mode. To accept real payments:
+    </p>
+    <ol>
+      <li>Complete Stripe's business verification process (business name, address, bank account for payouts).</li>
+      <li>Replace the <code>sk_test_</code> / <code>pk_test_</code> keys with live <code>sk_live_</code> / <code>pk_live_</code> keys in the environment variables.</li>
+      <li>Optionally configure Stripe webhooks for more reliable payment event handling.</li>
+    </ol>
+
+    <h3>2. Persistent Image Storage (S3 / Cloudflare R2)</h3>
+    <p>
+      As described above, move uploaded images to external object storage so they survive server restarts and redeployments.
+      This is the most impactful near-term infrastructure change.
+    </p>
+
+    <h3>3. Customer Password Self-Service</h3>
+    <p>
+      Currently, customers cannot reset their own password if they forget it.
+      Adding a "Forgot Password" flow (email with a one-time reset link) would improve usability and security.
+      This requires integrating a transactional email service (e.g., SendGrid, Postmark, or AWS SES).
+    </p>
+
+    <h3>4. Order Confirmation and Status Emails</h3>
+    <p>
+      Automatically emailing customers when:
+    </p>
+    <ul>
+      <li>Their order is confirmed (after payment)</li>
+      <li>Their order is marked Ready for Pickup</li>
+    </ul>
+    <p>
+      This eliminates the need for customers to keep the browser open to track status.
+      Implementation: integrate an email API in <code>web/lib/</code> and call it from within the order status update logic in <code>web/lib/orders.php</code>.
+    </p>
+
+    <h3>5. Automatic Refunds on Cancellation</h3>
+    <p>
+      When a Super Admin cancels an order that has already been paid, the system currently only changes the order status.
+      A future enhancement would automatically call the Stripe Refunds API to issue a refund at the same time,
+      reducing manual steps and the risk of forgetting to refund the customer.
+    </p>
+
+    <h3>6. Export Reports to CSV or PDF</h3>
+    <p>
+      Adding an export button to the Reports page would let the restaurant owner download sales data
+      without logging into the admin interface.
+      This could be implemented by adding a PHP endpoint that queries the same data as the Reports page
+      and outputs it as a downloadable file.
+    </p>
+
+    <h3>7. Dish Availability Toggle Per Day</h3>
+    <p>
+      Currently, a dish can only be added or removed from a day's menu entirely.
+      A per-day availability toggle (e.g., "sold out today") would let staff make quick day-of adjustments
+      without permanently removing a dish from the weekly menu.
+    </p>
+
+    <h3>8. Push Notifications for New Orders</h3>
+    <p>
+      The order queue currently uses Server-Sent Events (SSE) to refresh in real time,
+      but requires the staff to be actively looking at the dashboard.
+      Browser push notifications (or an audio alert) would immediately notify staff of new orders
+      even when they are on another browser tab.
+    </p>
+
+    <h3>9. Discount and Promo Code Support</h3>
+    <p>
+      Stripe Checkout natively supports coupon codes. The Super Admin could create Stripe coupons
+      from the admin interface, and customers could enter a promo code during checkout.
+    </p>
+
+    <h3>10. Multi-Language Support</h3>
+    <p>
+      Adding language options (e.g., English and Vietnamese) using PHP's localization functions
+      would improve accessibility for customers who are not comfortable reading English.
+    </p>
+
+    <!-- ================================================================
+         KNOWN LIMITATIONS
+    ================================================================ -->
+    <h2 id="limitations">Known Limitations</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Limitation</th><th>Impact</th><th>Recommended Fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Uploaded images lost on Render restart</td>
+            <td>Product images disappear after every deployment or restart</td>
+            <td>Migrate uploads to Amazon S3 or Cloudflare R2</td>
+          </tr>
+          <tr>
+            <td>Render free tier cold start</td>
+            <td>First request after inactivity takes 30–60 seconds</td>
+            <td>Upgrade to Render paid tier or migrate to a provider without cold starts</td>
+          </tr>
+          <tr>
+            <td>TiDB Cloud free tier hibernation</td>
+            <td>Database sleeps after 7 days of inactivity; first query is slow</td>
+            <td>Upgrade to paid TiDB tier or use a self-hosted MySQL/MariaDB</td>
+          </tr>
+          <tr>
+            <td>No automatic refund on order cancellation</td>
+            <td>Cancelling an order does not refund the customer automatically</td>
+            <td>Manually issue refund via Stripe Dashboard; or integrate Stripe Refunds API</td>
+          </tr>
+          <tr>
+            <td>Stripe test mode only</td>
+            <td>No real payments can be processed</td>
+            <td>Switch to live Stripe API keys after completing Stripe business verification</td>
+          </tr>
+          <tr>
+            <td>No customer password reset</td>
+            <td>Customers who forget their password have no self-service option</td>
+            <td>Implement "Forgot Password" flow with email-based reset tokens</td>
+          </tr>
+          <tr>
+            <td>No email notifications</td>
+            <td>Customers receive no email confirmation or status updates</td>
+            <td>Integrate a transactional email service (SendGrid, Postmark, etc.)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+<script src="assets/scrollspy.js"></script>
+</body>
+</html>

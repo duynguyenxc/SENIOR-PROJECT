@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Guide — Veg Buffet User Manual</title>
+  <link rel="stylesheet" href="assets/docs.css" />
+</head>
+<body>
+<div class="wrapper">
+
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="project-name">🥬 Veg Buffet</span>
+      <span class="project-sub">User Manual — Senior Project 2026</span>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Overview</div>
+      <a href="index.html" class="nav-link">Introduction</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Dependencies</div>
+      <a href="getting-started.html" class="nav-link">Getting Started</a>
+      <a href="getting-started.html#requirements" class="nav-sub">System Requirements</a>
+      <a href="getting-started.html#dependencies" class="nav-sub">All Dependencies</a>
+      <a href="getting-started.html#installation" class="nav-sub">Local Setup (Docker)</a>
+      <a href="getting-started.html#database" class="nav-sub">Database Schema</a>
+      <a href="getting-started.html#stripe" class="nav-sub">Stripe Payment Setup</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Use</div>
+      <a href="user-guide.html" class="nav-link active">User Guide</a>
+      <a href="#overview" class="nav-sub active">UI Overview</a>
+      <a href="#customer" class="nav-sub">Customer</a>
+      <a href="#staff" class="nav-sub">Staff</a>
+      <a href="#superadmin" class="nav-sub">Super Admin</a>
+      <a href="#accessibility" class="nav-sub">Accessibility</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">Administration</div>
+      <a href="administration.html" class="nav-link">Administration & Maintenance</a>
+      <a href="administration.html#routine" class="nav-sub">Routine Tasks</a>
+      <a href="administration.html#migration" class="nav-sub">Moving to a New Host</a>
+      <a href="administration.html#extend" class="nav-sub">Enhancements</a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="https://veg-buffet-web.onrender.com/" target="_blank">↗ Live Demo</a>
+      <a href="https://github.com/duynguyenxc/SENIOR-PROJECT" target="_blank">↗ Source Code (GitHub)</a>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <h1>User Guide</h1>
+    <p class="page-intro">
+      This section describes the user interface structure and functionality for all three types of users:
+      <strong>Customer</strong>, <strong>Staff</strong>, and <strong>Super Admin</strong>.
+      Each role has different needs and different pages available to them.
+    </p>
+
+    <!-- ================================================================
+         UI OVERVIEW
+    ================================================================ -->
+    <h2 id="overview">User Interface Overview</h2>
+    <p>
+      The application has <strong>two separate websites</strong> with separate login systems:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Website</th><th>URL</th><th>Who Uses It</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Customer website</strong></td>
+            <td><code>https://veg-buffet-web.onrender.com/</code></td>
+            <td>General public / customers</td>
+          </tr>
+          <tr>
+            <td><strong>Internal staff portal</strong></td>
+            <td><code>https://veg-buffet-web.onrender.com/admin/login.php</code></td>
+            <td>Staff and Super Admin only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <img src="assets/screenshots/homepage.png" alt="Veg Buffet homepage showing the navigation bar, welcome banner with two call-to-action buttons, and restaurant info cards for hours and pricing" />
+      <figcaption>Figure 1 — Customer homepage. The navigation bar at the top provides access to all customer pages. The banner buttons lead to the weekly menu and takeout ordering pages.</figcaption>
+    </figure>
+
+    <h3>Customer Website Navigation Bar</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nav Item</th><th>Page</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Home</strong></td><td><code>/index.php</code></td><td>Homepage with restaurant hours, address, and pricing</td></tr>
+          <tr><td><strong>Menu</strong></td><td><code>/menu.php</code></td><td>Weekly buffet menu organized by day</td></tr>
+          <tr><td><strong>Takeout</strong></td><td><code>/takeout.php</code></td><td>Takeout sets available to order</td></tr>
+          <tr><td><strong>Cart</strong></td><td><code>/cart.php</code></td><td>Cart review and checkout</td></tr>
+          <tr><td><strong>Login</strong></td><td><code>/login.php</code></td><td>Customer login (hidden when already logged in)</td></tr>
+          <tr><td><strong>Create account</strong></td><td><code>/register.php</code></td><td>Customer registration (hidden when logged in)</td></tr>
+          <tr><td><strong>My Orders</strong></td><td><code>/my_orders.php</code></td><td>Order history — only shown when logged in</td></tr>
+          <tr><td><strong>Staff Portal</strong></td><td><code>/admin/login.php</code></td><td>Link to the internal staff login page</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr />
+
+    <!-- ================================================================
+         CUSTOMER GUIDE
+    ================================================================ -->
+    <h2 id="customer">Customer Guide</h2>
+    <p>
+      Customers are the general public who visit the website to place takeout orders.
+      A customer account is required to place an order. Account creation is free and instant.
+    </p>
+
+    <h3 id="customer-register">Step 1 — Create an Account</h3>
+    <p>
+      Click <strong>Create account</strong> in the navigation bar. Fill in the form and click <strong>Create Account</strong>.
+    </p>
+
+    <figure>
+      <img src="assets/screenshots/register.png" alt="Customer registration form with fields for email, full name, phone number (optional), and password" />
+      <figcaption>Figure 2 — Customer registration form. Email, full name, and password are required. Phone number is optional.</figcaption>
+    </figure>
+
+    <ul>
+      <li><strong>Email</strong> — used as the login username; must be unique</li>
+      <li><strong>Full name</strong> — displayed on the order for staff</li>
+      <li><strong>Phone</strong> — optional; for staff to contact you about the order</li>
+      <li><strong>Password</strong> — minimum 6 characters; stored as a bcrypt hash in the database</li>
+    </ul>
+
+    <div class="note note-info">
+      <div class="note-title">ℹ Already have an account?</div>
+      Click <strong>Login</strong> in the navigation bar. Enter your email and password to sign in.
+    </div>
+
+    <h3 id="customer-menu">Step 2 — Browse the Weekly Menu</h3>
+    <p>
+      Click <strong>Menu</strong> in the navigation bar to see what the restaurant is serving this week.
+      The menu is organized by day — click any day tab to see that day's dishes.
+      Clicking a dish name expands it to show the full ingredient list.
+    </p>
+
+    <figure>
+      <img src="assets/screenshots/menu.png" alt="Weekly menu page with day selector tabs (Monday through Sunday) and dish cards below showing dish images and names" />
+      <figcaption>Figure 3 — Weekly Menu page. Click any day to see its dishes. The buffet price ($17/person, $15 on Thursdays) is shown at the top.</figcaption>
+    </figure>
+
+    <div class="note note-info">
+      <div class="note-title">ℹ Menu vs. Takeout</div>
+      The Menu page is for information only — you cannot order directly from it.
+      Ordering happens through the <strong>Takeout</strong> page.
+      Use the menu to decide which dishes to include in a Custom Takeout Box.
+    </div>
+
+    <h3 id="customer-takeout">Step 3 — Choose a Takeout Set</h3>
+    <p>
+      Click <strong>Takeout</strong> in the navigation bar to see available sets.
+      There are two types:
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Description</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Fixed sets</strong></td>
+            <td>Pre-packaged combinations at a set price. Contents are decided by the restaurant.</td>
+            <td>Vegan Delight Box ($14.99), Spicy Thai Combo ($15.00), Gluten-Free Harvest ($16.50)</td>
+          </tr>
+          <tr>
+            <td><strong>Custom Takeout Box</strong></td>
+            <td>You list up to 6 dishes from the weekly menu. Staff fulfill the first 6 items entered.</td>
+            <td>Custom Takeout Box ($18.00)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <img src="assets/screenshots/takeout.png" alt="Takeout menu page showing the Custom Takeout Box card and the Vegan Delight Box card, each with an image, description, price, and an Add to Cart button" />
+      <figcaption>Figure 4 — Takeout Menu page. Each set shows its name, description, image, and price. A special note field lets you add requests before clicking Add to Cart.</figcaption>
+    </figure>
+
+    <p>
+      For each set, you can optionally enter a <strong>special note</strong> (e.g., "no peanuts", "less spicy", "pack sauce separately")
+      before clicking <strong>Add to Cart</strong>.
+    </p>
+    <p>
+      For the <strong>Custom Takeout Box</strong>, type your chosen dish names in the text area
+      (one per line or comma-separated). Staff will prepare the first 6 dishes listed.
+    </p>
+
+    <div class="note note-warn">
+      <div class="note-title">⚠ You must be logged in to add items</div>
+      If you are not logged in, clicking Add to Cart redirects you to the login page.
+      Log in first, then return to the Takeout page.
+    </div>
+
+    <h3 id="customer-cart">Step 4 — Review Your Cart</h3>
+    <p>
+      Click <strong>Cart</strong> in the navigation bar. On this page you can:
+    </p>
+    <ul>
+      <li>Review all items, quantities, and prices</li>
+      <li>See the total amount</li>
+      <li>Enter your <strong>name</strong>, <strong>phone number</strong>, and <strong>preferred pickup time</strong></li>
+      <li>Add any <strong>special instructions</strong> or <strong>allergy notes</strong> for the entire order</li>
+      <li>Click <strong>Proceed to Payment</strong> to go to Stripe checkout</li>
+    </ul>
+
+    <figure>
+      <img src="assets/screenshots/cart.png" alt="Cart page showing an Order Details section on the left and a Checkout form on the right with fields for name, phone, pickup time, and instructions" />
+      <figcaption>Figure 5 — Cart page. The left section lists your items; the right section collects your contact details and pickup time before payment.</figcaption>
+    </figure>
+
+    <h3 id="customer-payment">Step 5 — Pay via Stripe</h3>
+    <p>
+      Clicking <strong>Proceed to Payment</strong> takes you to Stripe's hosted payment page.
+      Enter card details and complete the payment. The system is in <strong>test mode</strong> — no real money is charged.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Card Field</th><th>Test Value</th></tr></thead>
+        <tbody>
+          <tr><td>Card number</td><td><code>4242 4242 4242 4242</code></td></tr>
+          <tr><td>Expiry</td><td>Any future date</td></tr>
+          <tr><td>CVC</td><td>Any 3 digits</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      After payment, Stripe redirects back to the <strong>order confirmation page</strong>
+      showing your order number and a real-time status tracker.
+    </p>
+
+    <h3 id="customer-tracking">Step 6 — Track Your Order</h3>
+    <p>
+      The confirmation page shows the current order status and updates automatically without
+      needing to refresh the page.
+    </p>
+    <div class="flow">
+      <span class="flow-step">Paid</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Preparing</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Ready for Pickup</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Completed</span>
+    </div>
+    <p>
+      You can also view all past orders at any time by clicking <strong>My Orders</strong> in the navigation bar
+      (only visible when logged in).
+    </p>
+
+    <hr />
+
+    <!-- ================================================================
+         STAFF GUIDE
+    ================================================================ -->
+    <h2 id="staff">Staff Guide</h2>
+    <p>
+      Staff members process incoming orders through the internal portal.
+      Staff accounts are created exclusively by the Super Admin — staff cannot self-register.
+    </p>
+    <p>
+      Staff have access to: <strong>Order Queue (Dashboard)</strong> and <strong>Recent Orders (History)</strong>.
+      They do not have access to menu management, reports, or staff account management.
+    </p>
+
+    <h3>Logging In</h3>
+    <p>Go to the staff portal login page:</p>
+    <ul>
+      <li><strong>Live:</strong> <a href="https://veg-buffet-web.onrender.com/admin/login.php" target="_blank">https://veg-buffet-web.onrender.com/admin/login.php</a></li>
+      <li><strong>Local:</strong> <a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></li>
+    </ul>
+    <p>Enter your staff email and password, then click <strong>Access Dashboard</strong>.</p>
+
+    <figure>
+      <img src="assets/screenshots/admin-login.png" alt="Internal Staff Portal login page with a form containing Staff Email and Password fields and an Access Dashboard button" />
+      <figcaption>Figure 6 — Staff Portal login page. Only accounts created by the Super Admin can log in here. Customer accounts do not work here.</figcaption>
+    </figure>
+
+    <h3>The Order Fulfillment Dashboard</h3>
+    <p>After logging in, the dashboard shows:</p>
+    <ul>
+      <li><strong>Today's Revenue</strong> — total from paid orders today</li>
+      <li><strong>Completed Today</strong> — how many orders have been completed</li>
+      <li><strong>Active Queue</strong> — number of orders in progress</li>
+      <li><strong>Live order cards</strong> — all active orders sorted by pickup time (earliest first)</li>
+    </ul>
+
+    <figure>
+      <img src="assets/screenshots/admin-dashboard.png" alt="Admin order fulfillment dashboard showing three KPI metric cards at the top and an active order queue below with order cards" />
+      <figcaption>Figure 7 — Order Fulfillment Dashboard. KPI cards at top summarize today's activity. Active orders appear as cards below. The page auto-updates when new orders arrive.</figcaption>
+    </figure>
+
+    <h3>Reading an Order Card</h3>
+    <p>Each order card shows:</p>
+    <ul>
+      <li>Order number and customer name (e.g., "Order #5 — John Smith")</li>
+      <li>Customer phone number</li>
+      <li>Total amount</li>
+      <li>Pickup time (prominently on the right)</li>
+      <li>Current status (color-coded badge)</li>
+      <li>All items in the order with quantities and any item-level notes</li>
+      <li>Special instructions and allergy notes (shown in a highlighted callout if present)</li>
+    </ul>
+
+    <h3>Processing an Order (Advancing Status)</h3>
+    <p>Staff advance each order through three stages by clicking the button that appears on the card:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Current Status</th><th>Button to Click</th><th>New Status</th><th>When to Click</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Paid</strong></td>
+            <td>Start Preparing</td>
+            <td><strong>Preparing</strong></td>
+            <td>When you begin preparing this order in the kitchen</td>
+          </tr>
+          <tr>
+            <td><strong>Preparing</strong></td>
+            <td>Mark Ready</td>
+            <td><strong>Ready</strong></td>
+            <td>When the order is fully packed and ready for the customer</td>
+          </tr>
+          <tr>
+            <td><strong>Ready</strong></td>
+            <td>Complete Order</td>
+            <td><strong>Completed</strong></td>
+            <td>When the customer has picked up the order</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Once marked <strong>Completed</strong>, the order disappears from the queue and moves to history.
+      The customer's status tracker also updates in real time.
+    </p>
+
+    <h3>Order History</h3>
+    <p>
+      Click <strong>Recent Orders</strong> in the navigation bar to view all past orders (newest first).
+      Click any order to see its full details, including the Stripe payment reference ID.
+    </p>
+
+    <hr />
+
+    <!-- ================================================================
+         SUPER ADMIN GUIDE
+    ================================================================ -->
+    <h2 id="superadmin">Super Admin Guide</h2>
+    <p>
+      The Super Admin has full access to everything the Staff can do, plus four additional management areas:
+    </p>
+    <ol>
+      <li><strong>Menu Builder</strong> — manage the weekly dish menu by day</li>
+      <li><strong>Takeout Sets</strong> — manage the takeout product catalog</li>
+      <li><strong>Manage Staff</strong> — create, disable, and reset passwords for staff accounts</li>
+      <li><strong>Reports</strong> — view sales analytics and business insights</li>
+    </ol>
+    <p>Login credentials (default, change after setup):</p>
+    <ul>
+      <li><strong>Email:</strong> <code>admin@vegbuffet.com</code></li>
+      <li><strong>Password:</strong> <code>password</code></li>
+    </ul>
+
+    <h3>Super Admin Navigation Bar</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Nav Item</th><th>Who Can See It</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Orders</strong></td><td>Staff + SuperAdmin</td><td>Live order fulfillment queue</td></tr>
+          <tr><td><strong>Recent Orders</strong></td><td>Staff + SuperAdmin</td><td>Full order history</td></tr>
+          <tr><td><strong>Reports</strong></td><td>SuperAdmin only</td><td>Sales analytics, revenue, best sellers</td></tr>
+          <tr><td><strong>Manage Staff</strong></td><td>SuperAdmin only</td><td>Create, disable, reset staff accounts</td></tr>
+          <tr><td><strong>Menu Builder</strong></td><td>SuperAdmin only</td><td>Edit the weekly menu per day</td></tr>
+          <tr><td><strong>Takeout Sets</strong></td><td>SuperAdmin only</td><td>Add, edit, and toggle availability of takeout sets</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="admin-menu">Menu Builder</h3>
+    <p>
+      Go to <strong>Menu Builder</strong>. This page controls which dishes appear on each day of the weekly menu.
+    </p>
+
+    <figure>
+      <img src="assets/screenshots/admin-menu.png" alt="Menu Builder page showing a vertical list of day buttons on the left side (Monday highlighted), with a form to add dishes on the right" />
+      <figcaption>Figure 8 — Menu Builder. Select a day on the left to see its current dishes and a form to add new ones.</figcaption>
+    </figure>
+
+    <p>How to use:</p>
+    <ol>
+      <li>Click a <strong>day name</strong> to select it. The current dishes for that day appear on the right.</li>
+      <li>To <strong>remove a dish</strong> from the day, click <strong>Remove</strong> next to it.</li>
+      <li>To <strong>add a dish</strong>, fill in the <em>Dish Name</em>, <em>Description</em>, and optionally upload an image, then click <strong>Add</strong>.</li>
+    </ol>
+    <div class="note note-info">
+      <div class="note-title">ℹ Dishes are shared across days</div>
+      The same dish can appear on multiple days. If the dish name already exists in the database,
+      the system reuses the existing record and simply links it to the selected day.
+    </div>
+
+    <h3 id="admin-takeout">Takeout Sets Management</h3>
+    <p>Go to <strong>Takeout Sets</strong> to manage the product catalog customers see on the Takeout page.</p>
+    <ul>
+      <li><strong>Add a set:</strong> fill in name, description, price, image, and availability, then click Add Set.</li>
+      <li><strong>Toggle availability:</strong> each set has an Available/Unavailable toggle. Unavailable sets are hidden from customers.</li>
+      <li><strong>Edit a set:</strong> click Edit to modify any field.</li>
+      <li><strong>Delete a set:</strong> click Delete to permanently remove a set.</li>
+    </ul>
+
+    <h3 id="admin-staff">Staff Account Management</h3>
+    <p>Go to <strong>Manage Staff</strong> to manage who has access to the internal portal.</p>
+
+    <figure>
+      <img src="assets/screenshots/admin-staff.png" alt="Manage Staff page showing a table of current staff accounts with email, status, creation date, and action buttons (Disable, Reset Password), plus a Create Staff Account form at the bottom" />
+      <figcaption>Figure 9 — Staff Management page. Active staff accounts are listed at the top. The form at the bottom creates new staff accounts.</figcaption>
+    </figure>
+
+    <h4>Creating a Staff Account</h4>
+    <ol>
+      <li>Scroll to the <strong>Create Staff Account</strong> section.</li>
+      <li>Enter the staff member's email and a temporary initial password.</li>
+      <li>Click <strong>Create Staff</strong>. The account is immediately active.</li>
+      <li>Share the credentials with the new staff member securely.</li>
+    </ol>
+
+    <h4>Disabling an Account</h4>
+    <p>
+      Click <strong>Disable</strong> next to an account. The staff member can no longer log in.
+      Their account is not deleted — click <strong>Enable</strong> to restore access.
+    </p>
+
+    <h4>Resetting a Password</h4>
+    <p>
+      Click <strong>Reset Password</strong> next to an account. Enter and confirm a new temporary password.
+      Share it with the staff member so they can log in.
+    </p>
+
+    <h3 id="admin-reports">Sales Reports</h3>
+    <p>Go to <strong>Reports</strong> to view sales data. Accessible only to the Super Admin.</p>
+
+    <figure>
+      <img src="assets/screenshots/admin-reports.png" alt="Sales Analytics page showing a report range filter at the top, three KPI metric cards, a best-selling sets table, and a sidebar with status breakdown, business insights, and peak pickup windows" />
+      <figcaption>Figure 10 — Sales Analytics page. Filter by time period using the dropdown. The page shows revenue KPIs, best sellers, order status breakdown, auto-generated insights, and peak pickup times.</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Report Section</th><th>What It Shows</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Overview cards (top)</strong></td><td>Revenue and order count for Today, This Week, and This Month — always shown regardless of the filter</td></tr>
+          <tr><td><strong>Report Range filter</strong></td><td>Select Today / This Week / This Month / Custom Range. Click Apply Filter to update the data below.</td></tr>
+          <tr><td><strong>Summary</strong></td><td>Revenue, paid order count, and average order value for the selected period</td></tr>
+          <tr><td><strong>Best-Selling Sets</strong></td><td>Ranked table of takeout sets by units sold and revenue</td></tr>
+          <tr><td><strong>Status Breakdown</strong></td><td>Count of orders in each status for the period</td></tr>
+          <tr><td><strong>Business Insights</strong></td><td>Auto-generated text insights (e.g., top seller, underperforming sets)</td></tr>
+          <tr><td><strong>Slow-Moving Sets</strong></td><td>Available sets with the fewest orders — useful for deciding what to promote or remove</td></tr>
+          <tr><td><strong>Peak Pickup Windows</strong></td><td>Time slots with the most orders — useful for staffing</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Cancelling an Order</h3>
+    <p>
+      On the Order Queue dashboard, Super Admins see a <strong>Cancel Order</strong> button on each order card.
+      This immediately sets the order to Cancelled status.
+    </p>
+    <div class="note note-danger">
+      <div class="note-title">⛔ Cancelling does not issue a Stripe refund</div>
+      Cancelling an order only changes its status in the database.
+      To refund the customer, log into the Stripe Dashboard and issue a refund manually for that payment.
+    </div>
+
+    <hr />
+
+    <!-- ================================================================
+         ACCESSIBILITY
+    ================================================================ -->
+    <h2 id="accessibility">Accessibility</h2>
+    <p>The Veg Buffet web interface includes the following accessibility considerations:</p>
+    <ul>
+      <li><strong>Semantic HTML</strong> — uses <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;label&gt;</code>, and other semantic elements that provide baseline screen reader compatibility.</li>
+      <li><strong>Labeled form inputs</strong> — every form field has an associated <code>&lt;label&gt;</code> element, which is required for screen reader users to understand what each input expects.</li>
+      <li><strong>Text alongside color</strong> — status indicators (Paid, Preparing, Ready, Completed, Cancelled) always include the status name as text, not just color. Color is not the sole means of conveying information.</li>
+      <li><strong>Keyboard navigability</strong> — all interactive elements (buttons, links, form fields) are reachable by keyboard using the Tab key, consistent with standard browser behavior.</li>
+      <li><strong>Responsive layout</strong> — the layout adapts to mobile screens, tablets, and desktops. No specialized device or screen size is required.</li>
+      <li><strong>No specialized hardware required</strong> — the application runs entirely in a standard web browser and requires no specialized hardware.</li>
+    </ul>
+    <p>
+      The interface is self-explanatory by design, with informative button labels (e.g., "Start Preparing", "Mark Ready", "Complete Order") and
+      descriptive error messages shown inline when form validation fails.
+    </p>
+
+  </main>
+</div>
+<script src="assets/scrollspy.js"></script>
+</body>
+</html>
