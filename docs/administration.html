@@ -153,12 +153,12 @@
     <h3>Local Backup via Command Line</h3>
     <p>With the Docker containers running, run this command in a terminal:</p>
     <pre><code>docker exec senior-project-db-1 \
-  mysqldump -u app -papppass vegbuffet > backup.sql</code></pre>
+  mysqldump -u root -prootpass vegbuffet > backup.sql</code></pre>
     <p>This saves a complete backup as <code>backup.sql</code> in your current directory.</p>
 
     <h3>Restoring from a Backup</h3>
     <pre><code>docker exec -i senior-project-db-1 \
-  mysql -u app -papppass vegbuffet &lt; backup.sql</code></pre>
+  mysql -u root -prootpass vegbuffet &lt; backup.sql</code></pre>
 
     <h3>Production Database (TiDB Cloud)</h3>
     <p>
