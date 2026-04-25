@@ -243,30 +243,67 @@
          LOCAL INSTALLATION
     ================================================================ -->
     <h2 id="installation">Local Installation — Step by Step</h2>
+    <p>
+      This guide assumes you have never used Docker or a terminal before.
+      Follow each step in order.
+    </p>
 
-    <h3>Software to Install First</h3>
-    <p>Install these two tools before proceeding. No other software installation is needed.</p>
-
-    <h4>1. Docker Desktop</h4>
-    <ul>
-      <li>Download: <a href="https://www.docker.com/products/docker-desktop/" target="_blank">docker.com/products/docker-desktop</a></li>
-      <li>Install with default options. On Windows, accept the WSL 2 prompt if shown.</li>
-      <li>After installation, open Docker Desktop and wait until it says <em>"Docker Desktop is running"</em> before proceeding.</li>
-    </ul>
+    <!-- STEP 0: Install Docker -->
+    <h3>Step 0 — Install Docker Desktop</h3>
+    <p>
+      Docker Desktop is the only software you need to install. It automatically sets up PHP, Apache, and MariaDB
+      inside isolated "containers" — you do not need to install any of those manually.
+    </p>
+    <ol>
+      <li>
+        Go to <a href="https://www.docker.com/products/docker-desktop/" target="_blank">docker.com/products/docker-desktop</a>
+        and download the version for your operating system (Windows / macOS / Linux).
+      </li>
+      <li>
+        Run the installer. Accept all default options and click Next/Install until finished.
+        <ul>
+          <li><strong>Windows:</strong> If a dialog appears asking about <em>"WSL 2"</em>, click <strong>OK</strong>. WSL 2 is a Windows feature that Docker requires to run.</li>
+          <li><strong>macOS:</strong> Drag Docker into the Applications folder as usual.</li>
+        </ul>
+      </li>
+      <li>
+        Once installed, <strong>open Docker Desktop</strong> from the Start menu (Windows) or Launchpad (macOS).
+      </li>
+      <li>
+        Wait until the status bar in the bottom-left of Docker Desktop turns green and shows
+        <strong>"Engine running"</strong> (or the whale icon turns blue). This usually takes 30–60 seconds.
+      </li>
+    </ol>
 
     <div class="note note-warn">
       <div class="note-title">⚠ Docker Desktop must be running</div>
-      Docker Desktop must be open and running in the background at all times while the application is running.
-      If it is not running, all commands below will fail.
+      Docker Desktop must be open and running in the background <strong>the entire time you work with this project</strong>.
+      If Docker is not running, all commands below will fail with an error.
     </div>
 
-    <h4>2. Git (for cloning)</h4>
+    <p>To verify Docker was installed correctly, open a terminal and run:</p>
+    <pre><code>docker --version</code></pre>
+    <p>You should see something like <code>Docker version 27.x.x, build ...</code>. That means it is working.</p>
+
+    <!-- How to open terminal -->
+    <h3>How to Open a Terminal</h3>
+    <p>
+      A terminal (also called a command prompt or shell) is a text window where you type commands
+      to control the computer. All commands in this guide are run here.
+    </p>
     <ul>
-      <li><strong>Windows:</strong> <a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a> — install with default options</li>
-      <li><strong>macOS:</strong> Run <code>git --version</code> in Terminal; macOS will prompt you to install it if not present</li>
-      <li><strong>Ubuntu/Linux:</strong> <code>sudo apt install git</code></li>
+      <li>
+        <strong>Windows:</strong> Press <kbd>Windows</kbd> + <kbd>R</kbd>, type <code>cmd</code>, and press Enter.
+        Alternatively, search for "Command Prompt" in the Start menu.
+        If you have Git installed, you can also use <strong>Git Bash</strong>.
+      </li>
+      <li>
+        <strong>macOS:</strong> Press <kbd>Cmd</kbd> + <kbd>Space</kbd>, type "Terminal", and press Enter.
+      </li>
+      <li>
+        <strong>Ubuntu / Linux:</strong> Press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>.
+      </li>
     </ul>
-    <p>If you downloaded the ZIP file instead of cloning, Git is not required.</p>
 
     <hr />
 
@@ -276,38 +313,82 @@
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>Get the Project Code</h3>
-          <p>Open a terminal (Command Prompt or PowerShell on Windows; Terminal on macOS/Linux) and run:</p>
+
+          <p><strong>Option A — Clone with Git (recommended):</strong></p>
+          <p>
+            If you do not have Git, download it from <a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a>
+            and install with all default options.
+          </p>
+          <p>Open a terminal and run these two commands:</p>
           <div class="code-filename">Terminal</div>
           <pre><code>git clone https://github.com/duynguyenxc/SENIOR-PROJECT.git
-cd Senior-Project</code></pre>
-          <p>Or if you downloaded the ZIP: extract it and navigate into the folder with <code>cd Senior-Project</code>.</p>
+cd SENIOR-PROJECT</code></pre>
+          <p>
+            The <code>git clone</code> command creates a folder called <code>SENIOR-PROJECT</code> in your current location.
+            The <code>cd SENIOR-PROJECT</code> command moves you inside that folder.
+          </p>
+
+          <p><strong>Option B — Download ZIP:</strong></p>
+          <p>
+            Go to <a href="https://github.com/duynguyenxc/SENIOR-PROJECT" target="_blank">github.com/duynguyenxc/SENIOR-PROJECT</a>,
+            click the green <strong>Code</strong> button → <strong>Download ZIP</strong>.
+            Extract the ZIP file. You will get a folder named <code>SENIOR-PROJECT-main</code>.
+          </p>
+          <p>Open a terminal and navigate into that folder. For example, if you extracted to the Desktop:</p>
+          <div class="code-filename">Windows (Command Prompt)</div>
+          <pre><code>cd %USERPROFILE%\Desktop\SENIOR-PROJECT-main</code></pre>
+          <div class="code-filename">macOS / Linux</div>
+          <pre><code>cd ~/Desktop/SENIOR-PROJECT-main</code></pre>
+
+          <div class="note note-tip">
+            <div class="note-title">💡 Verify you are in the right folder</div>
+            Run <code>dir</code> (Windows) or <code>ls</code> (macOS/Linux).
+            You must see the file <code>docker-compose.yml</code> listed.
+            If you do not see it, you are in the wrong folder.
+          </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h3>Create the Environment Configuration File</h3>
+          <h3>Create the <code>.env</code> Configuration File</h3>
           <p>
-            The application reads private settings (like API keys) from a file called <code>.env</code>.
+            The application reads sensitive settings (such as API keys) from a file named <code>.env</code>.
             This file is not included in the repository and must be created manually.
           </p>
-          <p>
-            In the project root folder (same folder that contains <code>docker-compose.yml</code>),
-            create a new file named <code>.env</code> with the following content:
-          </p>
-          <div class="code-filename">.env (create this file in the project root)</div>
+
+          <h4>On Windows:</h4>
+          <ol>
+            <li>Open Notepad (search in the Start menu).</li>
+            <li>Paste the content shown below into Notepad.</li>
+            <li>Go to <strong>File → Save As</strong>.</li>
+            <li>Navigate to the <code>SENIOR-PROJECT</code> folder (the one containing <code>docker-compose.yml</code>).</li>
+            <li>In the <em>File name</em> field, type <code>.env</code> (include the leading dot).</li>
+            <li>In the <em>Save as type</em> dropdown, select <strong>All Files (*.*)</strong>.</li>
+            <li>Click <strong>Save</strong>.</li>
+          </ol>
+
+          <h4>On macOS / Linux:</h4>
+          <p>Run this in your terminal (from inside the project folder):</p>
+          <pre><code>touch .env && open -e .env   # macOS — opens in TextEdit
+# or: nano .env              # Linux</code></pre>
+
+          <h4>Contents of the <code>.env</code> file:</h4>
+          <div class="code-filename">.env</div>
           <pre><code>APP_URL=http://localhost:8080
 STRIPE_SECRET_KEY=sk_test_YOUR_KEY_HERE
 STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_HERE</code></pre>
+
           <p>
-            Replace <code>sk_test_YOUR_KEY_HERE</code> and <code>pk_test_YOUR_KEY_HERE</code> with your Stripe test keys.
-            See the <a href="#stripe">Stripe Setup</a> section for how to obtain them.
+            Replace <code>sk_test_YOUR_KEY_HERE</code> and <code>pk_test_YOUR_KEY_HERE</code> with your actual Stripe test keys.
+            See the <a href="#stripe">Stripe Setup</a> section below for how to get them.
           </p>
+
           <div class="note note-info">
-            <div class="note-title">ℹ Running Without Stripe Keys</div>
-            You can leave the Stripe keys as placeholder text to run the app without payment functionality.
-            Everything except the actual checkout step will work normally.
+            <div class="note-title">ℹ You can run the app without Stripe keys</div>
+            If you do not have Stripe keys yet, leave the placeholder values as-is.
+            Everything will work normally except the payment checkout step.
           </div>
         </div>
       </div>
@@ -316,38 +397,95 @@ STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_HERE</code></pre>
         <div class="step-num">3</div>
         <div class="step-body">
           <h3>Start the Application</h3>
-          <p>Make sure Docker Desktop is running, then from inside the <code>Senior-Project</code> folder, run:</p>
-          <div class="code-filename">Terminal (run from the project root)</div>
+          <p>
+            Make sure Docker Desktop is running (look for the blue whale icon in the taskbar/menu bar).
+            In your terminal, inside the project folder, run:
+          </p>
+          <div class="code-filename">Terminal (run from the project root folder)</div>
           <pre><code>docker compose up --build</code></pre>
-          <p>This single command automatically:</p>
+
+          <p>
+            <strong>The first time you run this</strong>, Docker will automatically download the required images
+            (PHP 8.3 + Apache, MariaDB 11.4, phpMyAdmin). This requires an internet connection and
+            may take <strong>3–10 minutes</strong> depending on your network speed.
+            You will see a lot of scrolling text — that is completely normal.
+          </p>
+
+          <p>Once the downloads finish, Docker will automatically:</p>
           <ul>
-            <li>Downloads the PHP 8.3 + Apache Docker image (first run: takes a few minutes)</li>
-            <li>Downloads the MariaDB 11.4 Docker image (first run: takes a few minutes)</li>
-            <li>Builds the web container from <code>web/Dockerfile</code></li>
-            <li>Creates the <code>vegbuffet</code> database and runs the schema + seed SQL files</li>
-            <li>Starts three containers: the web app, the database, and phpMyAdmin</li>
+            <li>Build the web server image from <code>web/Dockerfile</code></li>
+            <li>Create the <code>vegbuffet</code> database</li>
+            <li>Run <code>db/init/01_schema.sql</code> to create all tables</li>
+            <li>Run <code>db/init/02_seed.sql</code> to insert sample data and the default admin account</li>
+            <li>Start 3 containers: the web app, the database, and phpMyAdmin</li>
           </ul>
-          <p>The application is ready when you see output similar to:</p>
-          <pre><code>db-1   | [Note] mariadbd: ready for connections.
-web-1  | AH00558: apache2: Could not reliably determine the server's ...
-web-1  | AH00292: Apache/2.4.x (Debian) ... configured -- resuming normal operations</code></pre>
+
+          <p><strong>The application is ready</strong> when you see output similar to this:</p>
+          <pre><code>senior-project-db-1   | [Note] mariadbd: ready for connections.
+senior-project-web-1  | AH00558: apache2: Could not reliably determine ...
+senior-project-web-1  | AH00292: Apache/2.4.x ... resuming normal operations</code></pre>
+
+          <p>
+            The terminal will keep showing logs and <strong>will not return to a command prompt</strong> — this is expected.
+            The containers are running in the foreground. Do not close this terminal window.
+          </p>
+
+          <div class="note note-warn">
+            <div class="note-title">⚠ Common errors</div>
+            <ul style="margin:0">
+              <li>
+                <strong>"port is already allocated"</strong> — Port 8080 or 8081 is already in use by another program.
+                Stop that program or change the port numbers in <code>docker-compose.yml</code>.
+              </li>
+              <li>
+                <strong>"docker: command not found"</strong> — Docker Desktop is not installed or not open.
+                Open Docker Desktop first, wait for it to finish starting, then try again.
+              </li>
+              <li>
+                <strong>"Cannot connect to the Docker daemon"</strong> — Docker Desktop has not finished starting yet.
+                Wait until the whale icon turns blue/green, then try again.
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-body">
-          <h3>Open the Application</h3>
-          <p>Open a web browser and navigate to:</p>
+          <h3>Open the Application in a Browser</h3>
+          <p>
+            Open any web browser (Chrome, Firefox, Edge, Safari) and go to one of the addresses below.
+            <strong>No additional setup is needed</strong> — the app is already running.
+          </p>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Service</th><th>URL</th></tr></thead>
+              <thead><tr><th>Service</th><th>URL</th><th>Description</th></tr></thead>
               <tbody>
-                <tr><td>Customer Website</td><td><a href="http://localhost:8080" target="_blank">http://localhost:8080</a></td></tr>
-                <tr><td>Staff / Admin Portal</td><td><a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></td></tr>
-                <tr><td>Database GUI (phpMyAdmin)</td><td><a href="http://localhost:8081" target="_blank">http://localhost:8081</a></td></tr>
+                <tr>
+                  <td><strong>Customer Website</strong></td>
+                  <td><a href="http://localhost:8080" target="_blank">http://localhost:8080</a></td>
+                  <td>The public-facing site where customers browse and order</td>
+                </tr>
+                <tr>
+                  <td><strong>Staff / Admin Portal</strong></td>
+                  <td><a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></td>
+                  <td>Internal login for staff and administrators</td>
+                </tr>
+                <tr>
+                  <td><strong>Database GUI</strong></td>
+                  <td><a href="http://localhost:8081" target="_blank">http://localhost:8081</a></td>
+                  <td>phpMyAdmin — inspect and edit database records visually</td>
+                </tr>
               </tbody>
             </table>
+          </div>
+
+          <div class="note note-info">
+            <div class="note-title">ℹ What is localhost?</div>
+            <code>localhost</code> is a name that points to your own computer.
+            <code>http://localhost:8080</code> means "connect to port 8080 on this machine,"
+            where Docker is running the web server. No one else on the internet can access this address.
           </div>
         </div>
       </div>
@@ -355,36 +493,49 @@ web-1  | AH00292: Apache/2.4.x (Debian) ... configured -- resuming normal operat
       <div class="step">
         <div class="step-num">5</div>
         <div class="step-body">
-          <h3>Log In</h3>
-          <p>A default Super Admin account is created automatically from the seed data. Use it to log into the staff portal:</p>
+          <h3>Log In for the First Time</h3>
+          <p>
+            The file <code>db/init/02_seed.sql</code> automatically creates a default Super Admin account
+            when the database initializes. Use these credentials to log into the staff portal:
+          </p>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Field</th><th>Value</th></tr></thead>
               <tbody>
-                <tr><td>URL</td><td><a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></td></tr>
+                <tr><td>Login URL</td><td><a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></td></tr>
                 <tr><td>Email</td><td><code>admin@vegbuffet.com</code></td></tr>
                 <tr><td>Password</td><td><code>password</code></td></tr>
               </tbody>
             </table>
           </div>
+
           <div class="note note-warn">
-            <div class="note-title">⚠ Change the Default Password</div>
-            The seed data sets the admin password to <code>password</code> for local development convenience.
-            Do not use this password in a production deployment.
+            <div class="note-title">⚠ Change the default password</div>
+            The password <code>password</code> is intentionally simple for local development convenience.
+            Do not use it in a production deployment.
           </div>
-          <p>To test the customer experience, create a new customer account at:</p>
-          <pre><code>http://localhost:8080/register.php</code></pre>
-          <p>Customer accounts and staff/admin accounts are completely separate systems.</p>
+
+          <p>
+            To test the customer experience, register a new customer account at:
+            <a href="http://localhost:8080/register.php" target="_blank">http://localhost:8080/register.php</a>.
+            Customer accounts and staff/admin accounts are completely separate systems.
+          </p>
         </div>
       </div>
 
     </div><!-- /steps -->
 
     <h3>Stopping the Application</h3>
-    <p>Press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal to stop the containers. To remove containers but keep data:</p>
+    <p>
+      When you are done, go back to the terminal that is running Docker and press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
+      Docker will stop the containers. Your database data is preserved.
+    </p>
+    <p>To remove the containers but keep the data volume:</p>
     <pre><code>docker compose down</code></pre>
-    <p>To completely reset everything (all data deleted):</p>
+    <p>To completely reset everything including the database (all data will be lost):</p>
     <pre><code>docker compose down -v</code></pre>
+    <p>Next time you want to run the app (no rebuild needed):</p>
+    <pre><code>docker compose up</code></pre>
 
     <!-- ================================================================
          CONFIGURATION REFERENCE
@@ -528,127 +679,138 @@ web-1  | AH00292: Apache/2.4.x (Debian) ... configured -- resuming normal operat
     <h3>Full SQL CREATE Statements (<code>db/init/01_schema.sql</code>)</h3>
     <p>These are the exact SQL statements that create the database structure:</p>
 
-    <pre><code><span class="kw">CREATE TABLE IF NOT EXISTS</span> Admin (
-  adminId       <span class="kw">INT</span>          <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  email         <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
-  passwordHash  <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
-  role          <span class="kw">VARCHAR</span>(<span class="num">32</span>)  <span class="kw">NOT NULL DEFAULT</span> <span class="str">'Staff'</span>,
-  isActive      <span class="kw">BOOLEAN</span>      <span class="kw">NOT NULL DEFAULT</span> <span class="num">1</span>,
-  createdTime   <span class="kw">DATETIME</span>     <span class="kw">NOT NULL</span>,
-  <span class="kw">PRIMARY KEY</span> (adminId),
-  <span class="kw">UNIQUE KEY</span> uq_admin_email (email)
-) <span class="kw">ENGINE</span>=InnoDB;
+    <pre><code>create table if not exists Admin (
+  adminId int not null auto_increment,
+  email varchar(255) not null,
+  passwordHash varchar(255) not null,
+  role varchar(32) not null default 'Staff',
+  isActive boolean not null default 1,
+  createdTime datetime not null,
+  primary key (adminId),
+  unique key uq_admin_email (email)
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> Customer (
-  customerId   <span class="kw">INT</span>          <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  email        <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
-  passwordHash <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
-  fullName     <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
-  phone        <span class="kw">VARCHAR</span>(<span class="num">64</span>)  <span class="kw">NULL</span>,
-  createdTime  <span class="kw">DATETIME</span>     <span class="kw">NOT NULL</span>,
-  <span class="kw">PRIMARY KEY</span> (customerId),
-  <span class="kw">UNIQUE KEY</span> uq_customer_email (email)
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists Customer (
+  customerId int not null auto_increment,
+  email varchar(255) not null,
+  passwordHash varchar(255) not null,
+  fullName varchar(255) not null,
+  phone varchar(64) null,
+  createdTime datetime not null,
+  primary key (customerId),
+  unique key uq_customer_email (email)
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> Day (
-  dayId     <span class="kw">INT</span>         <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  dayName   <span class="kw">VARCHAR</span>(<span class="num">32</span>) <span class="kw">NOT NULL</span>,
-  sortOrder <span class="kw">INT</span>         <span class="kw">NOT NULL</span>,
-  <span class="kw">PRIMARY KEY</span> (dayId),
-  <span class="kw">UNIQUE KEY</span> uq_day_name (dayName),
-  <span class="kw">UNIQUE KEY</span> uq_day_sort (sortOrder)
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists Day (
+  dayId int not null auto_increment,
+  dayName varchar(32) not null,
+  sortOrder int not null,
+  primary key (dayId),
+  unique key uq_day_name (dayName),
+  unique key uq_day_sort (sortOrder)
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> Dish (
-  dishId      <span class="kw">INT</span>           <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  dishName    <span class="kw">VARCHAR</span>(<span class="num">255</span>)  <span class="kw">NOT NULL</span>,
-  description <span class="kw">TEXT</span>          <span class="kw">NULL</span>,
-  imageUrl    <span class="kw">VARCHAR</span>(<span class="num">2048</span>) <span class="kw">NULL</span>,
-  isActive    <span class="kw">BOOLEAN</span>       <span class="kw">NOT NULL DEFAULT</span> <span class="num">1</span>,
-  <span class="kw">PRIMARY KEY</span> (dishId),
-  <span class="kw">UNIQUE KEY</span> uq_dish_name (dishName)
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists Dish (
+  dishId int not null auto_increment,
+  dishName varchar(255) not null,
+  description text null,
+  imageUrl varchar(2048) null,
+  isActive boolean not null default 1,
+  primary key (dishId),
+  unique key uq_dish_name (dishName)
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> DayMenuItem (
-  dayMenuItemId <span class="kw">INT</span> <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  dayId         <span class="kw">INT</span> <span class="kw">NOT NULL</span>,
-  dishId        <span class="kw">INT</span> <span class="kw">NOT NULL</span>,
-  <span class="kw">PRIMARY KEY</span> (dayMenuItemId),
-  <span class="kw">UNIQUE KEY</span> uq_day_dish (dayId, dishId),
-  <span class="kw">CONSTRAINT</span> fk_daymenu_day
-    <span class="kw">FOREIGN KEY</span> (dayId) <span class="kw">REFERENCES</span> Day(dayId)
-    <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>,
-  <span class="kw">CONSTRAINT</span> fk_daymenu_dish
-    <span class="kw">FOREIGN KEY</span> (dishId) <span class="kw">REFERENCES</span> Dish(dishId)
-    <span class="kw">ON DELETE RESTRICT ON UPDATE CASCADE</span>
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists DayMenuItem (
+  dayMenuItemId int not null auto_increment,
+  dayId int not null,
+  dishId int not null,
+  primary key (dayMenuItemId),
+  unique key uq_day_dish (dayId, dishId),
+  key idx_daymenu_day (dayId),
+  key idx_daymenu_dish (dishId),
+  constraint fk_daymenu_day
+    foreign key (dayId) references Day(dayId)
+    on delete cascade
+    on update cascade,
+  constraint fk_daymenu_dish
+    foreign key (dishId) references Dish(dishId)
+    on delete restrict
+    on update cascade
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> TakeoutSet (
-  setId                 <span class="kw">INT</span>            <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  setName               <span class="kw">VARCHAR</span>(<span class="num">255</span>)   <span class="kw">NOT NULL</span>,
-  description           <span class="kw">VARCHAR</span>(<span class="num">1024</span>)  <span class="kw">NOT NULL</span>,
-  price                 <span class="kw">DECIMAL</span>(<span class="num">10,2</span>) <span class="kw">NOT NULL</span>,
-  imageUrl              <span class="kw">VARCHAR</span>(<span class="num">2048</span>)  <span class="kw">NULL</span>,
-  isAvailable           <span class="kw">BOOLEAN</span>        <span class="kw">NOT NULL</span>,
-  sortOrder             <span class="kw">INT</span>            <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
-  allowsCustomSelection <span class="kw">BOOLEAN</span>        <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
-  selectionLimit        <span class="kw">INT</span>            <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
-  <span class="kw">PRIMARY KEY</span> (setId),
-  <span class="kw">UNIQUE KEY</span> uq_set_name (setName)
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists TakeoutSet (
+  setId int not null auto_increment,
+  setName varchar(255) not null,
+  description varchar(1024) not null,
+  price decimal(10,2) not null,
+  imageUrl varchar(2048) null,
+  isAvailable boolean not null,
+  sortOrder int not null default 0,
+  allowsCustomSelection boolean not null default 0,
+  selectionLimit int not null default 0,
+  primary key (setId),
+  unique key uq_set_name (setName),
+  key idx_set_available (isAvailable)
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> `Order` (
-  orderId             <span class="kw">INT</span>            <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  dailyOrderNumber    <span class="kw">INT</span>            <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
-  customerId          <span class="kw">INT</span>            <span class="kw">NULL</span>,
-  customerName        <span class="kw">VARCHAR</span>(<span class="num">255</span>)   <span class="kw">NOT NULL</span>,
-  customerPhone       <span class="kw">VARCHAR</span>(<span class="num">64</span>)    <span class="kw">NOT NULL</span>,
-  pickupTime          <span class="kw">DATETIME</span>       <span class="kw">NOT NULL</span>,
-  status              <span class="kw">VARCHAR</span>(<span class="num">32</span>)    <span class="kw">NOT NULL</span>,
-  totalAmount         <span class="kw">DECIMAL</span>(<span class="num">10,2</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="num">0.00</span>,
-  specialInstructions <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
-  allergyNotes        <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
-  createdTime         <span class="kw">DATETIME</span>       <span class="kw">NOT NULL</span>,
-  updatedTime         <span class="kw">DATETIME</span>       <span class="kw">NOT NULL</span>,
-  <span class="kw">PRIMARY KEY</span> (orderId),
-  <span class="kw">KEY</span> idx_order_customer (customerId),
-  <span class="kw">KEY</span> idx_order_status (status),
-  <span class="kw">KEY</span> idx_order_created (createdTime),
-  <span class="kw">KEY</span> idx_order_pickup (pickupTime)
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists `Order` (
+  orderId int not null auto_increment,
+  dailyOrderNumber int not null default 0,
+  customerId int null,
+  customerName varchar(255) not null,
+  customerPhone varchar(64) not null,
+  pickupTime datetime not null,
+  status varchar(32) not null,
+  totalAmount decimal(10,2) not null default 0.00,
+  specialInstructions text null,
+  allergyNotes text null,
+  createdTime datetime not null,
+  updatedTime datetime not null,
+  primary key (orderId),
+  key idx_order_customer (customerId),
+  key idx_order_daily (dailyOrderNumber),
+  key idx_order_status (status),
+  key idx_order_created (createdTime),
+  key idx_order_pickup (pickupTime)
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> OrderItem (
-  orderItemId     <span class="kw">INT</span>            <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  orderId         <span class="kw">INT</span>            <span class="kw">NOT NULL</span>,
-  setId           <span class="kw">INT</span>            <span class="kw">NULL</span>,
-  lineType        <span class="kw">VARCHAR</span>(<span class="num">32</span>)    <span class="kw">NOT NULL DEFAULT</span> <span class="str">'set'</span>,
-  lineLabel       <span class="kw">VARCHAR</span>(<span class="num">255</span>)   <span class="kw">NOT NULL</span>,
-  unitPrice       <span class="kw">DECIMAL</span>(<span class="num">10,2</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="num">0.00</span>,
-  lineDescription <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
-  lineNotes       <span class="kw">TEXT</span>           <span class="kw">NULL</span>,
-  imageUrl        <span class="kw">VARCHAR</span>(<span class="num">2048</span>)  <span class="kw">NULL</span>,
-  quantity        <span class="kw">INT</span>            <span class="kw">NOT NULL</span>,
-  <span class="kw">PRIMARY KEY</span> (orderItemId),
-  <span class="kw">CONSTRAINT</span> fk_orderitem_order
-    <span class="kw">FOREIGN KEY</span> (orderId) <span class="kw">REFERENCES</span> `Order`(orderId)
-    <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>,
-  <span class="kw">CONSTRAINT</span> fk_orderitem_set
-    <span class="kw">FOREIGN KEY</span> (setId) <span class="kw">REFERENCES</span> TakeoutSet(setId)
-    <span class="kw">ON DELETE SET NULL ON UPDATE CASCADE</span>
-) <span class="kw">ENGINE</span>=InnoDB;
+create table if not exists OrderItem (
+  orderItemId int not null auto_increment,
+  orderId int not null,
+  setId int null,
+  lineType varchar(32) not null default 'set',
+  lineLabel varchar(255) not null,
+  unitPrice decimal(10,2) not null default 0.00,
+  lineDescription text null,
+  lineNotes text null,
+  imageUrl varchar(2048) null,
+  quantity int not null,
+  primary key (orderItemId),
+  key idx_orderitem_order (orderId),
+  key idx_orderitem_set (setId),
+  constraint fk_orderitem_order
+    foreign key (orderId) references `Order`(orderId)
+    on delete cascade
+    on update cascade,
+  constraint fk_orderitem_set
+    foreign key (setId) references TakeoutSet(setId)
+    on delete set null
+    on update cascade
+) engine=InnoDB;
 
-<span class="kw">CREATE TABLE IF NOT EXISTS</span> Payment (
-  paymentId     <span class="kw">INT</span>          <span class="kw">NOT NULL AUTO_INCREMENT</span>,
-  orderId       <span class="kw">INT</span>          <span class="kw">NOT NULL</span>,
-  paymentStatus <span class="kw">VARCHAR</span>(<span class="num">64</span>)  <span class="kw">NOT NULL</span>,
-  referenceId   <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>, <span class="cmt">-- Stripe session ID</span>
-  <span class="kw">PRIMARY KEY</span> (paymentId),
-  <span class="kw">UNIQUE KEY</span> uq_payment_reference (referenceId),
-  <span class="kw">UNIQUE KEY</span> uq_payment_order (orderId),
-  <span class="kw">CONSTRAINT</span> fk_payment_order
-    <span class="kw">FOREIGN KEY</span> (orderId) <span class="kw">REFERENCES</span> `Order`(orderId)
-    <span class="kw">ON DELETE CASCADE ON UPDATE CASCADE</span>
-) <span class="kw">ENGINE</span>=InnoDB;</code></pre>
+create table if not exists Payment (
+  paymentId int not null auto_increment,
+  orderId int not null,
+  paymentStatus varchar(64) not null,
+  referenceId varchar(255) not null,
+  primary key (paymentId),
+  unique key uq_payment_reference (referenceId),
+  unique key uq_payment_order (orderId),
+  constraint fk_payment_order
+    foreign key (orderId) references `Order`(orderId)
+    on delete cascade
+    on update cascade
+) engine=InnoDB;</code></pre>
 
     <h3>Accessing the Database with phpMyAdmin (Local)</h3>
     <p>When running locally, you can inspect and manage the database at <a href="http://localhost:8081" target="_blank">http://localhost:8081</a>.</p>
