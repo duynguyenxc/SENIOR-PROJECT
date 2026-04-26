@@ -312,93 +312,124 @@
     ================================================================ -->
     <h2 id="staff">Staff Guide</h2>
     <p>
-      Staff members process incoming orders through the internal portal.
+      Staff members use the internal portal to process incoming orders in real time.
       Staff accounts are created exclusively by the Super Admin — staff cannot self-register.
     </p>
     <p>
-      Staff have access to: <strong>Order Queue (Dashboard)</strong> and <strong>Recent Orders (History)</strong>.
-      They do not have access to menu management, reports, or staff account management.
+      A Staff account has access to two pages only:
     </p>
+    <ul>
+      <li><strong>Orders</strong> — the live order fulfillment queue</li>
+      <li><strong>Recent Orders</strong> — the full order history</li>
+    </ul>
+    <p>Staff do not have access to menu management, takeout set management, staff account management, or sales reports. Those are Super Admin only.</p>
 
     <h3>Logging In</h3>
     <p>Go to the staff portal login page:</p>
     <ul>
-      <li><strong>Live:</strong> <a href="https://veg-buffet-web.onrender.com/admin/login.php" target="_blank">https://veg-buffet-web.onrender.com/admin/login.php</a></li>
-      <li><strong>Local:</strong> <a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></li>
+      <li><strong>Live site:</strong> <a href="https://veg-buffet-web.onrender.com/admin/login.php" target="_blank">https://veg-buffet-web.onrender.com/admin/login.php</a></li>
+      <li><strong>Local (Docker):</strong> <a href="http://localhost:8080/admin/login.php" target="_blank">http://localhost:8080/admin/login.php</a></li>
     </ul>
-    <p>Enter your staff email and password, then click <strong>Access Dashboard</strong>.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Email</td><td><code>staff@vegbuffet.com</code></td></tr>
+          <tr><td>Password</td><td><code>password</code></td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <figure>
       <img src="assets/screenshots/admin-login.png" alt="Internal Staff Portal login page with a form containing Staff Email and Password fields and an Access Dashboard button" />
-      <figcaption>Figure 8 — Staff Portal login page. Only accounts created by the Super Admin can log in here. Customer accounts do not work here.</figcaption>
+      <figcaption>Figure 8 — Staff Portal login page. Enter your staff email and password and click Access Dashboard. Customer accounts from the public website cannot log in here.</figcaption>
     </figure>
 
-    <h3>The Order Fulfillment Dashboard</h3>
-    <p>After logging in, the dashboard shows:</p>
-    <ul>
-      <li><strong>Today's Revenue</strong> — total from paid orders today</li>
-      <li><strong>Completed Today</strong> — how many orders have been completed</li>
-      <li><strong>Active Queue</strong> — number of orders in progress</li>
-      <li><strong>Live order cards</strong> — all active orders sorted by pickup time (earliest first)</li>
-    </ul>
+    <h3>The Active Fulfillment Queue</h3>
+    <p>
+      After logging in, you land on the <strong>Orders</strong> page — the live fulfillment queue.
+      The page shows three summary cards at the top and all active orders below.
+    </p>
 
     <figure>
-      <img src="assets/screenshots/admin-dashboard.png" alt="Admin order fulfillment dashboard showing three KPI metric cards at the top and an active order queue below with order cards" />
-      <figcaption>Figure 9 — Order Fulfillment Dashboard. KPI cards at top summarize today's activity. Active orders appear as cards below. The page auto-updates when new orders arrive.</figcaption>
+      <img src="assets/screenshots/admin-dashboard.png" alt="Staff Active Fulfillment Queue page showing three KPI cards (Today's Revenue, Completed Today, Active Queue) and an order card for Order #005 with customer name, phone, total, pickup time, items, and Start Preparing button" />
+      <figcaption>Figure 9 — Active Fulfillment Queue. The three cards at the top summarize today's activity. Each order card below shows all details needed to fulfill the order. The page refreshes automatically when new orders arrive.</figcaption>
     </figure>
 
-    <h3>Reading an Order Card</h3>
-    <p>Each order card shows:</p>
+    <p>The three summary cards show:</p>
     <ul>
-      <li>Order number and customer name (e.g., "Order #5 — John Smith")</li>
-      <li>Customer phone number</li>
-      <li>Total amount</li>
-      <li>Pickup time (prominently on the right)</li>
-      <li>Current status (color-coded badge)</li>
-      <li>All items in the order with quantities and any item-level notes</li>
-      <li>Special instructions and allergy notes (shown in a highlighted callout if present)</li>
+      <li><strong>Today's Revenue</strong> — total amount from all paid orders placed today</li>
+      <li><strong>Completed Today</strong> — number of orders successfully handed to customers today</li>
+      <li><strong>Active Queue</strong> — number of orders currently being processed (Paid or Preparing)</li>
     </ul>
 
-    <h3>Processing an Order (Advancing Status)</h3>
-    <p>Staff advance each order through three stages by clicking the button that appears on the card:</p>
+    <h3>Reading an Order Card</h3>
+    <p>Each order card displays everything needed to fulfill the order:</p>
+    <ul>
+      <li><strong>Order number and customer name</strong> — e.g., "Order #005 – duy"</li>
+      <li><strong>Phone number and total amount</strong> — shown below the order title</li>
+      <li><strong>Pickup time</strong> — shown in green on the upper right; orders are sorted earliest first</li>
+      <li><strong>Status badge</strong> — color-coded (Paid, Preparing, Ready)</li>
+      <li><strong>Items list</strong> — every item and quantity in the order</li>
+      <li><strong>Special instructions / allergy notes</strong> — shown in a highlighted callout box if the customer added any</li>
+    </ul>
+    <p>Each card also has two action buttons:</p>
+    <ul>
+      <li><strong>View Details</strong> — opens the full order detail page, including the Stripe payment reference ID and all timestamps</li>
+      <li><strong>Status action button</strong> — advances the order to the next stage (see table below)</li>
+    </ul>
+
+    <h3>Processing an Order</h3>
+    <p>
+      Advance each order through its stages by clicking the action button on the card.
+      The status updates immediately and the customer's tracking page reflects the change in real time.
+    </p>
 
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Current Status</th><th>Button to Click</th><th>New Status</th><th>When to Click</th></tr>
+          <tr><th>Current Status</th><th>Button on Card</th><th>Next Status</th><th>When to Click</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Paid</strong></td>
-            <td>Start Preparing</td>
-            <td><strong>Preparing</strong></td>
-            <td>When you begin preparing this order in the kitchen</td>
+            <td><span style="color:#b45309;font-weight:600">Paid</span></td>
+            <td><strong>Start Preparing</strong></td>
+            <td><span style="color:#1d4ed8;font-weight:600">Preparing</span></td>
+            <td>When you start preparing this order in the kitchen</td>
           </tr>
           <tr>
-            <td><strong>Preparing</strong></td>
-            <td>Mark Ready</td>
-            <td><strong>Ready</strong></td>
-            <td>When the order is fully packed and ready for the customer</td>
+            <td><span style="color:#1d4ed8;font-weight:600">Preparing</span></td>
+            <td><strong>Mark Ready</strong></td>
+            <td><span style="color:#15803d;font-weight:600">Ready</span></td>
+            <td>When the order is fully packed and waiting for the customer to pick up</td>
           </tr>
           <tr>
-            <td><strong>Ready</strong></td>
-            <td>Complete Order</td>
-            <td><strong>Completed</strong></td>
-            <td>When the customer has picked up the order</td>
+            <td><span style="color:#15803d;font-weight:600">Ready</span></td>
+            <td><strong>Complete Order</strong></td>
+            <td><span style="color:#6b7280;font-weight:600">Completed</span></td>
+            <td>When the customer has collected their order</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <p>
-      Once marked <strong>Completed</strong>, the order disappears from the queue and moves to history.
-      The customer's status tracker also updates in real time.
+      Once marked <strong>Completed</strong>, the order card disappears from the queue automatically
+      and moves to the Recent Orders history. The customer's status tracker updates at the same time.
     </p>
 
-    <h3>Order History</h3>
+    <div class="note note-info">
+      <div class="note-title">ℹ The queue updates automatically</div>
+      New orders appear on the queue page automatically when a customer completes payment —
+      no manual refresh needed. The page polls for updates in the background.
+    </div>
+
+    <h3>Recent Orders (Order History)</h3>
     <p>
-      Click <strong>Recent Orders</strong> in the navigation bar to view all past orders (newest first).
-      Click any order to see its full details, including the Stripe payment reference ID.
+      Click <strong>Recent Orders</strong> in the navigation bar to view all past orders, newest first.
+      This includes completed, cancelled, and all active orders across all time.
+      Click any order to see its full detail page, including the Stripe payment reference ID and all status change timestamps.
     </p>
 
     <hr />
