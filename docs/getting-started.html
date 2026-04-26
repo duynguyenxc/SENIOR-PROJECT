@@ -330,7 +330,7 @@ COPY ./render-start.sh /usr/local/bin/render-start.sh</code></pre>
     retries: 20</code></pre>
     <ul>
       <li>Uses the official <strong>MariaDB 11.4</strong> image — no installation needed.</li>
-      <li>Automatically creates a database named <code>vegbuffet</code> with a root user (<code>rootpass</code>) and an application user (<code>app</code> / <code>apppass</code>).</li>
+      <li>Automatically creates a database named <code>vegbuffet</code>. Two database users are set up: <code>root</code> (password: <code>rootpass</code>) for full admin access (used by phpMyAdmin), and <code>app</code> (password: <code>apppass</code>) as a limited user that the PHP web application uses to query the database — following the principle of least privilege.</li>
       <li>The <code>./db/init</code> folder is mounted as <code>/docker-entrypoint-initdb.d</code> — MariaDB automatically runs every <code>.sql</code> file in this folder in alphabetical order on the very first startup. This is how <code>01_schema.sql</code> and <code>02_seed.sql</code> get executed automatically.</li>
       <li>Database data is persisted in a Docker volume named <code>db_data</code>. This means your data survives container restarts. Only <code>docker compose down -v</code> deletes it.</li>
       <li>The health check polls MariaDB every 5 seconds to confirm it is fully ready before the other services start.</li>
