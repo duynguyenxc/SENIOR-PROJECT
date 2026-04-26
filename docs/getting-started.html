@@ -825,60 +825,167 @@ create table if not exists Payment (
     ================================================================ -->
     <h2 id="stripe">Stripe Payment Setup</h2>
     <p>
-      Veg Buffet uses <strong>Stripe Checkout</strong> for payment processing, currently in <strong>test/sandbox mode</strong>
-      — no real money is ever charged. To enable the payment flow locally:
+      Veg Buffet integrates <strong>Stripe Checkout</strong> for payment processing.
+      The application runs in <strong>sandbox (test) mode</strong> — no real money is ever charged,
+      and no real bank account is needed. This section walks you through setting up Stripe so the
+      payment flow works when running locally.
     </p>
 
+    <div class="note note-info">
+      <div class="note-title">ℹ You can skip this and still run the app</div>
+      If you only want to explore the UI or test the order queue, leave the Stripe keys as placeholder text in <code>.env</code>.
+      The checkout button will fail, but everything else works normally.
+    </div>
+
     <div class="steps">
+
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>Create a Free Stripe Account</h3>
-          <p>Go to <a href="https://stripe.com" target="_blank">stripe.com</a> and sign up. No credit card needed.</p>
+          <ol>
+            <li>Go to <a href="https://stripe.com" target="_blank">stripe.com</a> and click <strong>Start now</strong>.</li>
+            <li>Enter your email address, full name, country, and a password.</li>
+            <li>Check your inbox for a verification email from Stripe and click the confirmation link.</li>
+            <li>Complete any onboarding steps Stripe asks for. You can skip the "Activate payments" steps — those are only needed for real money. We only need the test environment.</li>
+          </ol>
+          <p>No credit card is required to create a Stripe account.</p>
         </div>
       </div>
+
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h3>Get Your Test API Keys</h3>
-          <p>In the Stripe dashboard, go to <strong>Developers → API Keys</strong>. Copy both keys:</p>
-          <ul>
-            <li>Publishable key — starts with <code>pk_test_</code></li>
-            <li>Secret key — starts with <code>sk_test_</code> (click "Reveal" to see it)</li>
-          </ul>
+          <h3>Enable Test Mode in the Dashboard</h3>
+          <p>
+            After logging in, you will land in the Stripe Dashboard.
+            Look at the top navigation bar — there should be a toggle labeled <strong>"Test mode"</strong>.
+            Make sure it is switched <strong>ON</strong> (it is enabled by default for new accounts).
+          </p>
+          <p>
+            When Test mode is on, the dashboard header turns orange/yellow and all activity is completely sandboxed.
+            No real transactions can occur. If you see a live-mode indicator instead, click the toggle to switch back.
+          </p>
         </div>
       </div>
+
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <h3>Add Keys to Your .env File</h3>
-          <pre><code>STRIPE_SECRET_KEY=sk_test_51...
-STRIPE_PUBLISHABLE_KEY=pk_test_51...</code></pre>
-          <p>Restart the containers after changing <code>.env</code>:</p>
-          <pre><code>docker compose down
-docker compose up</code></pre>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <h3>Test Card Details</h3>
-          <p>When prompted to enter a card during checkout, use these test values:</p>
+          <h3>Get Your Test API Keys</h3>
+          <ol>
+            <li>In the left sidebar of the Stripe Dashboard, click <strong>Developers</strong>.</li>
+            <li>Under Developers, click <strong>API keys</strong>.</li>
+            <li>You will see two keys listed under the "Standard keys" section:</li>
+          </ol>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Field</th><th>Value</th></tr></thead>
+              <thead><tr><th>Key type</th><th>Starts with</th><th>What to do</th></tr></thead>
               <tbody>
-                <tr><td>Card number</td><td><code>4242 4242 4242 4242</code></td></tr>
-                <tr><td>Expiry date</td><td>Any future date (e.g., <code>12/29</code>)</td></tr>
-                <tr><td>CVC</td><td>Any 3 digits (e.g., <code>123</code>)</td></tr>
-                <tr><td>Name / ZIP</td><td>Any value</td></tr>
+                <tr>
+                  <td><strong>Publishable key</strong></td>
+                  <td><code>pk_test_</code></td>
+                  <td>Visible by default — click the Copy button next to it</td>
+                </tr>
+                <tr>
+                  <td><strong>Secret key</strong></td>
+                  <td><code>sk_test_</code></td>
+                  <td>Click <strong>"Reveal test key"</strong> to show it, then copy it</td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <p>No real charge will be made.</p>
+          <div class="note note-warn">
+            <div class="note-title">⚠ Keep your secret key private</div>
+            Never commit the secret key to Git or share it publicly.
+            The <code>.env</code> file is listed in <code>.gitignore</code> specifically to prevent this.
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Add the Keys to Your <code>.env</code> File</h3>
+          <p>Open the <code>.env</code> file in the project root and replace the placeholder values:</p>
+          <div class="code-filename">.env</div>
+          <pre><code>APP_URL=http://localhost:8080
+STRIPE_SECRET_KEY=sk_test_51...     ← paste your secret key here
+STRIPE_PUBLISHABLE_KEY=pk_test_51...  ← paste your publishable key here</code></pre>
+          <p>Save the file.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Restart the Docker Containers</h3>
+          <p>
+            Environment variables from <code>.env</code> are only loaded when the containers start.
+            If Docker is already running, you must restart it for the new keys to take effect.
+          </p>
+          <p>In your terminal (from the project root), run:</p>
+          <div class="code-filename">Terminal</div>
+          <pre><code>docker compose down
+docker compose up</code></pre>
+          <p>Wait until you see the "ready for connections" and Apache startup messages again before continuing.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>Run a Test Checkout</h3>
+          <ol>
+            <li>Open <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> in your browser.</li>
+            <li>Register a customer account or log in with an existing one.</li>
+            <li>Go to the <strong>Takeout</strong> page, add items to your cart, and proceed to checkout.</li>
+            <li>Fill in your name, phone number, and a pickup time, then click <strong>Proceed to Payment</strong>.</li>
+            <li>You will be redirected to a Stripe-hosted payment page. Enter the test card details below:</li>
+          </ol>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Value to enter</th></tr></thead>
+              <tbody>
+                <tr><td>Card number</td><td><code>4242 4242 4242 4242</code></td></tr>
+                <tr><td>Expiry date</td><td>Any future date — for example, <code>12/29</code></td></tr>
+                <tr><td>CVC</td><td>Any 3 digits — for example, <code>123</code></td></tr>
+                <tr><td>Cardholder name</td><td>Any name</td></tr>
+                <tr><td>Billing ZIP / postal code</td><td>Any value — for example, <code>12345</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Click <strong>Pay</strong>. Stripe will process the test payment and redirect you back to the
+            order confirmation page on the Veg Buffet site.
+          </p>
+          <div class="note note-info">
+            <div class="note-title">ℹ No real charge occurs</div>
+            The card number <code>4242 4242 4242 4242</code> is a special number provided by Stripe
+            for testing purposes only. It is not a real card and no bank account is involved.
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h3>Verify the Payment in the Stripe Dashboard</h3>
+          <p>After a successful test payment, you can confirm it worked in the Stripe Dashboard:</p>
+          <ol>
+            <li>Go back to <a href="https://dashboard.stripe.com/test/payments" target="_blank">dashboard.stripe.com</a> (make sure Test mode is on).</li>
+            <li>In the left sidebar, click <strong>Payments</strong>.</li>
+            <li>You will see the test payment listed with a green <strong>"Succeeded"</strong> status.</li>
+            <li>Click on it to see the full details — the amount, the Stripe session ID, and the metadata.</li>
+          </ol>
+          <p>
+            The Stripe session ID is also stored in the <code>Payment</code> table of the database
+            as the <code>referenceId</code> column, linking the Stripe record to the order in the app.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /steps -->
 
   </main>
 </div>

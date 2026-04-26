@@ -18,6 +18,11 @@
     <div class="nav-group">
       <div class="nav-group-title">Overview</div>
       <a href="index.html" class="nav-link active">Introduction</a>
+      <a href="index.html#what-is-it" class="nav-sub">What Is Veg Buffet?</a>
+      <a href="index.html#system-overview" class="nav-sub">What the System Does</a>
+      <a href="index.html#stripe-highlight" class="nav-sub">Stripe Payment Integration</a>
+      <a href="index.html#user-roles" class="nav-sub">User Roles</a>
+      <a href="index.html#tech-stack" class="nav-sub">Technology Stack</a>
     </div>
 
     <div class="nav-group">
@@ -97,7 +102,7 @@
       <li>View available takeout sets with prices and descriptions</li>
       <li>Create an account and log in</li>
       <li>Add items to a cart and complete checkout with a chosen pickup time</li>
-      <li>Pay securely via Stripe (test/sandbox mode)</li>
+      <li>Pay securely via Stripe Checkout (sandbox mode)</li>
       <li>Receive order confirmation and track the order status in real time</li>
       <li>View full order history from the account area</li>
     </ul>
@@ -107,6 +112,88 @@
       <li><strong>Staff</strong> — view the live order queue, update order statuses, review history</li>
       <li><strong>Super Admin</strong> — all staff capabilities plus: manage the weekly menu, manage takeout sets, create/disable staff accounts, view sales analytics</li>
     </ul>
+
+    <!-- Stripe highlight -->
+    <h2 id="stripe-highlight">Payment Integration — Stripe Checkout</h2>
+    <p>
+      One of the most significant technical achievements in this project is the integration of
+      <strong>Stripe Checkout</strong> — a production-grade, industry-standard payment gateway used by
+      companies like Amazon, Shopify, and Lyft. This makes Veg Buffet function as a real e-commerce
+      application, not just a prototype.
+    </p>
+
+    <h3>What Stripe Checkout Is</h3>
+    <p>
+      Stripe Checkout is a hosted, pre-built payment page provided by Stripe.
+      When a customer clicks "Proceed to Payment," the application creates a secure payment session
+      on Stripe's servers (via an API call from PHP), then redirects the customer to Stripe's
+      own payment page hosted at <code>checkout.stripe.com</code>.
+      The customer enters their card details directly on Stripe's page — not on the Veg Buffet server.
+      After the payment succeeds or is cancelled, Stripe redirects the customer back to the application.
+    </p>
+
+    <h3>Why It Is Secure</h3>
+    <p>
+      This architecture is intentionally designed to keep sensitive financial data off our server entirely:
+    </p>
+    <ul>
+      <li>
+        <strong>No card data touches the application server.</strong>
+        Card numbers, CVCs, and billing details are entered on Stripe's hosted page and processed
+        by Stripe's infrastructure. The Veg Buffet server never sees, stores, or transmits card information.
+      </li>
+      <li>
+        <strong>PCI DSS compliance is handled by Stripe.</strong>
+        The Payment Card Industry Data Security Standard (PCI DSS) is a strict set of security requirements
+        for handling card data. By offloading payment to Stripe's hosted page, the application is considered
+        "SAQ-A" compliant — the lightest possible compliance burden — because it never touches raw card data.
+      </li>
+      <li>
+        <strong>HTTPS enforced by Stripe.</strong>
+        Stripe's checkout page is always served over HTTPS with TLS encryption. No insecure transmission
+        of payment data is possible.
+      </li>
+      <li>
+        <strong>Payment verification is server-side.</strong>
+        After the customer is redirected back, the application verifies the payment status by calling
+        the Stripe API from the server using the secret key — not by trusting any URL parameter or
+        client-side data. This prevents anyone from faking a successful payment.
+      </li>
+    </ul>
+
+    <h3>Why Stripe Was Chosen</h3>
+    <ul>
+      <li>
+        <strong>Sandbox mode for safe testing.</strong>
+        Stripe provides a fully functional test environment with dedicated test API keys and
+        test card numbers. The entire payment flow — from checkout to confirmation — can be tested
+        without any real money, no real bank account, and no approval process.
+      </li>
+      <li>
+        <strong>No server-side card handling required.</strong>
+        Stripe Checkout handles the payment form, validation, and processing on its own servers.
+        This significantly reduces the complexity and security risk of the implementation.
+      </li>
+      <li>
+        <strong>Well-documented API with official SDKs.</strong>
+        Stripe's PHP library is straightforward to integrate. The entire payment logic in this
+        project fits in a single file (<code>web/lib/payment.php</code>), with no third-party
+        dependency manager (Composer) required.
+      </li>
+      <li>
+        <strong>Industry standard.</strong>
+        Stripe is one of the most widely used payment processors in the world. Integrating it
+        in a capstone project demonstrates real-world full-stack development skills.
+      </li>
+    </ul>
+
+    <div class="note note-info">
+      <div class="note-title">ℹ Currently running in sandbox mode</div>
+      Both the live site and the local environment use Stripe's <strong>test mode</strong>.
+      No real transactions can occur. Payments can be tested using Stripe's provided test card
+      number <code>4242 4242 4242 4242</code>. See the
+      <a href="getting-started.html#stripe">Stripe Setup</a> section for full instructions.
+    </div>
 
     <h2 id="user-roles">User Roles</h2>
     <div class="table-wrap">
