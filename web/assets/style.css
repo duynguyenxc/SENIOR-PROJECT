@@ -115,6 +115,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); box-sh
 .btn-ok-soft { background: #D1FAE5; color: #059669; border-color: #A7F3D0; }
 .btn-ok-soft:hover { background: #A7F3D0; color: #047857; }
 .btn-danger-outline { color: var(--danger); border-color: var(--danger); background: transparent; }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: white; }
+.btn-danger:hover { background: #b91c1c; border-color: #b91c1c; color: white; }
+.btn-sm { padding: 0.3rem 0.75rem; font-size: 0.82rem; }
 .btn-danger-outline:hover { background: rgba(239,68,68,0.08); color: var(--danger); }
 
 .alert {
@@ -501,6 +504,14 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); box-sh
 
 .order-card.status-cancelled {
   border-left-color: var(--danger);
+}
+
+.order-pending-actions {
+  margin: 10px 0;
+  padding: 10px 14px;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 6px;
 }
 
 .order-header {

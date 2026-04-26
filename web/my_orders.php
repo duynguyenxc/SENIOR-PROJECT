@@ -51,6 +51,16 @@ render_header('My Orders | Veg Buffet');
               <div class="muted meta-small-top">Ordered: <?= date('M j, g:i A', strtotime($o['createdTime'])) ?></div>
             </div>
           </div>
+          <?php if ((string)$o['status'] === ORDER_STATUS_PENDING): ?>
+            <div class="order-pending-actions">
+              <p class="muted text-sm">Payment was not completed for this order. You can resume payment or cancel it.</p>
+              <div class="btnrow">
+                <a href="/pay.php?orderId=<?= (int)$o['orderId'] ?>" class="btn btn-primary btn-sm">Resume Payment</a>
+                <a href="/cancel.php?order_id=<?= (int)$o['orderId'] ?>" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Cancel this unpaid order?')">Cancel Order</a>
+              </div>
+            </div>
+          <?php endif; ?>
           <div class="order-items">
             <strong class="muted">Items:</strong>
             <ul class="order-items-list">
