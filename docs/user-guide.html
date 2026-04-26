@@ -625,18 +625,23 @@
          ACCESSIBILITY
     ================================================================ -->
     <h2 id="accessibility">Accessibility</h2>
-    <p>The Veg Buffet web interface includes the following accessibility considerations:</p>
+    <p>
+      Veg Buffet is a standard browser-based web application — no installation, plugin, or specialized
+      hardware is required to use it. Any device with a modern web browser and an internet connection is sufficient,
+      including phones, tablets, and desktops.
+    </p>
+    <p>The interface was built with the following accessibility considerations in mind:</p>
     <ul>
-      <li><strong>Semantic HTML</strong> — uses <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;label&gt;</code>, and other semantic elements that provide baseline screen reader compatibility.</li>
-      <li><strong>Labeled form inputs</strong> — every form field has an associated <code>&lt;label&gt;</code> element, which is required for screen reader users to understand what each input expects.</li>
-      <li><strong>Text alongside color</strong> — status indicators (Paid, Preparing, Ready, Completed, Cancelled) always include the status name as text, not just color. Color is not the sole means of conveying information.</li>
-      <li><strong>Keyboard navigability</strong> — all interactive elements (buttons, links, form fields) are reachable by keyboard using the Tab key, consistent with standard browser behavior.</li>
-      <li><strong>Responsive layout</strong> — the layout adapts to mobile screens, tablets, and desktops. No specialized device or screen size is required.</li>
-      <li><strong>No specialized hardware required</strong> — the application runs entirely in a standard web browser and requires no specialized hardware.</li>
+      <li><strong>Labeled form inputs</strong> — every form field is paired with a visible label, so screen reader users hear what each field expects before typing.</li>
+      <li><strong>Status text alongside color</strong> — order status badges (Paid, Preparing, Ready, Completed, Cancelled) always show the status name in text. Color reinforces the meaning but is never the only indicator, so the information is still clear without color perception.</li>
+      <li><strong>Keyboard navigation</strong> — all buttons, links, and form fields are reachable using the Tab key. No mouse is required to operate the site.</li>
+      <li><strong>Responsive layout</strong> — the layout adjusts for mobile, tablet, and desktop screen sizes. There is no minimum screen size requirement.</li>
+      <li><strong>Clear action labels</strong> — buttons use plain descriptive text ("Start Preparing", "Mark Ready", "Complete Order", "Cancel Order") rather than icons alone, so the action is always self-evident.</li>
+      <li><strong>Inline validation messages</strong> — if a required field is left blank or a value is invalid, the error appears next to the field immediately, rather than as a separate page or generic alert.</li>
     </ul>
     <p>
-      The interface is self-explanatory by design, with informative button labels (e.g., "Start Preparing", "Mark Ready", "Complete Order") and
-      descriptive error messages shown inline when form validation fails.
+      The site does not currently implement advanced features such as ARIA live regions, high-contrast mode,
+      or skip-navigation links. These would be natural next steps for a future accessibility improvement pass.
     </p>
 
   </main>
