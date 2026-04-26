@@ -190,8 +190,8 @@
           <tr>
             <td><strong>Payment Service</strong></td>
             <td>Stripe Checkout</td>
-            <td>API v1 (latest)</td>
-            <td>Handles online payment. Integrated server-side via Stripe's PHP API (loaded via HTTP, no Composer required). Currently in test/sandbox mode.</td>
+            <td>Test mode</td>
+            <td>Handles online payment via Stripe-hosted checkout pages. The application creates a Stripe payment session and redirects the customer to Stripe's page. No real money is charged.</td>
           </tr>
           <tr>
             <td><strong>Database GUI</strong></td>
@@ -224,10 +224,10 @@
             <td>Plain HTML served by PHP. CSS in <code>web/assets/style.css</code>, JS in <code>web/assets/app.js</code>. No frameworks or bundlers.</td>
           </tr>
           <tr>
-            <td><strong>External Libraries</strong></td>
-            <td>Stripe PHP SDK</td>
-            <td>Bundled in <code>web/lib/payment.php</code></td>
-            <td>Makes API calls to Stripe for session creation and payment verification. Loaded via <code>require</code>, no Composer used.</td>
+            <td><strong>Payment Integration</strong></td>
+            <td>Stripe REST API (direct HTTP)</td>
+            <td><code>web/lib/payment.php</code></td>
+            <td>Custom PHP code that calls Stripe's API endpoints directly via PHP's built-in <code>cURL</code> extension. No third-party SDK or Composer is required — all HTTP communication is handled with raw cURL calls.</td>
           </tr>
         </tbody>
       </table>

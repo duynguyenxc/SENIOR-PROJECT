@@ -176,10 +176,10 @@
         This significantly reduces the complexity and security risk of the implementation.
       </li>
       <li>
-        <strong>Well-documented API with official SDKs.</strong>
-        Stripe's PHP library is straightforward to integrate. The entire payment logic in this
-        project fits in a single file (<code>web/lib/payment.php</code>), with no third-party
-        dependency manager (Composer) required.
+        <strong>No third-party SDK required.</strong>
+        The entire payment integration is implemented in a single file (<code>web/lib/payment.php</code>)
+        using PHP's built-in cURL extension to call Stripe's REST API directly.
+        No Composer, no package manager, and no external library files are needed.
       </li>
       <li>
         <strong>Industry standard.</strong>
