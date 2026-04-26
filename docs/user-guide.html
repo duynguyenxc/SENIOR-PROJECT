@@ -197,7 +197,7 @@
 
     <p>
       For any set, you can optionally enter a <strong>special note</strong> (e.g., "no peanuts", "less spicy", "pack sauce separately")
-      in the text field that appears on the set card before clicking <strong>Add to Cart</strong>.
+      using the text field on the set card, before clicking <strong>Add to Cart</strong>.
     </p>
     <p>
       For the <strong>Custom Takeout Box</strong>, a text area appears where you type your chosen dish names
@@ -232,9 +232,9 @@
 
     <h3 id="customer-payment">Step 5 — Pay via Stripe Checkout</h3>
     <p>
-      Clicking <strong>Proceed to Payment</strong> creates your order in the database (status: <em>Pending</em>)
-      and redirects you to Stripe's hosted payment page. This page is served by Stripe — your payment
-      details are entered directly on Stripe's servers, not on the Veg Buffet server.
+      Clicking <strong>Proceed to Payment</strong> creates your order and records it as <em>Pending</em>,
+      then redirects you to Stripe's hosted payment page. This page is served entirely by Stripe —
+      your payment details are entered on Stripe's servers, not on the Veg Buffet server.
     </p>
 
     <figure>
@@ -322,7 +322,7 @@
       <li><strong>Orders</strong> — the live order fulfillment queue</li>
       <li><strong>Recent Orders</strong> — the full order history</li>
     </ul>
-    <p>Staff do not have access to menu management, takeout set management, staff account management, or sales reports. Those are Super Admin only.</p>
+    <p>Staff do not have access to menu management, takeout set management, staff account management, or sales reports — these features are reserved for Super Admin accounts only.</p>
 
     <h3>Logging In</h3>
     <p>Go to the staff portal login page:</p>
@@ -447,7 +447,7 @@
       <li><strong>Manage Staff</strong> — create, disable, and reset passwords for staff accounts</li>
       <li><strong>Reports</strong> — view sales analytics and business insights</li>
     </ol>
-    <p>Login credentials (default, change after setup):</p>
+    <p>Default login credentials (update these after initial setup):</p>
     <ul>
       <li><strong>Email:</strong> <code>admin@vegbuffet.com</code></li>
       <li><strong>Password:</strong> <code>password</code></li>
@@ -511,7 +511,7 @@
       <li><strong>Add a set:</strong> fill in the Name, Description, Price, and optionally upload an image on the right panel, then click <strong>Add Set</strong>.</li>
       <li><strong>Edit a set:</strong> click <strong>Edit</strong> on any existing set to modify its fields inline.</li>
       <li><strong>Delete a set:</strong> click <strong>Delete</strong> to permanently remove a set. This cannot be undone.</li>
-      <li><strong>Custom Box tag:</strong> sets marked as "Custom Box" (like the Custom Takeout Box) allow customers to write in their own dish selection instead of a fixed contents list.</li>
+      <li><strong>Custom Box tag:</strong> sets marked as "Custom Box" (like the Custom Takeout Box) allow customers to enter their own dish selection instead of a fixed contents list.</li>
     </ul>
 
     <h3 id="admin-staff">Staff Account Management</h3>
@@ -550,8 +550,8 @@
     </p>
 
     <figure>
-      <img src="assets/screenshots/admin-reports.png" alt="Sales Analytics page showing a Report Range filter with dropdown and date pickers, three always-visible KPI cards for Today / This Week / This Month revenue, a period summary section with Revenue, Paid Orders and Average Order Value, and a Status Breakdown panel on the right" />
-      <figcaption>Figure 14 — Sales Analytics page. The top filter selects the reporting period. KPI cards always show Today, This Week, and This Month at a glance. The detailed summary and status breakdown update based on the selected filter.</figcaption>
+      <img src="assets/screenshots/admin-reports.png" alt="Sales Analytics page showing a Report Range filter with dropdown and date pickers, three always-visible revenue summary cards for Today / This Week / This Month, a period summary section with Revenue, Paid Orders and Average Order Value, and a Status Breakdown panel on the right" />
+      <figcaption>Figure 14 — Sales Analytics page. The top filter selects the reporting period. The revenue summary cards at the top always show Today, This Week, and This Month at a glance. The detailed summary and status breakdown update based on the selected filter.</figcaption>
     </figure>
 
     <h4>Using the Report Filter</h4>
