@@ -474,92 +474,149 @@
     </p>
 
     <figure>
-      <img src="assets/screenshots/admin-menu.png" alt="Menu Builder page showing a vertical list of day buttons on the left side (Monday highlighted), with a form to add dishes on the right" />
-      <figcaption>Figure 10 — Menu Builder. Select a day on the left to see its current dishes and a form to add new ones.</figcaption>
+      <img src="assets/screenshots/admin-menu.png" alt="Menu Builder page showing a vertical list of day buttons on the left side (Monday highlighted), with current dishes listed and a form to add new dishes on the right" />
+      <figcaption>Figure 10 — Menu Builder. Click a day on the left to see its current dishes. Use the form on the right to add new dishes to that day.</figcaption>
     </figure>
 
     <p>How to use:</p>
     <ol>
-      <li>Click a <strong>day name</strong> to select it. The current dishes for that day appear on the right.</li>
+      <li>Click a <strong>day name</strong> on the left to select it. The dishes assigned to that day appear on the right.</li>
       <li>To <strong>remove a dish</strong> from the day, click <strong>Remove</strong> next to it.</li>
-      <li>To <strong>add a dish</strong>, fill in the <em>Dish Name</em>, <em>Description</em>, and optionally upload an image, then click <strong>Add</strong>.</li>
+      <li>To <strong>add a dish</strong>, fill in the <em>Dish Name</em> and <em>Description / Ingredients</em>, optionally upload an image, then click <strong>Add</strong>.</li>
     </ol>
+
+    <figure>
+      <img src="assets/screenshots/admin-menu-form.png" alt="Add Dish to Menu form with fields for Dish Name, Description / Ingredients textarea, and Upload Image file picker, with a green Add button at the bottom" />
+      <figcaption>Figure 11 — Add Dish form inside Menu Builder. Enter the dish name and ingredient description, optionally upload a photo, then click Add to assign it to the selected day.</figcaption>
+    </figure>
+
     <div class="note note-info">
       <div class="note-title">ℹ Dishes are shared across days</div>
       The same dish can appear on multiple days. If the dish name already exists in the database,
-      the system reuses the existing record and simply links it to the selected day.
+      the system reuses the existing dish record and links it to the selected day — no duplicate is created.
     </div>
 
     <h3 id="admin-takeout">Takeout Sets Management</h3>
-    <p>Go to <strong>Takeout Sets</strong> to manage the product catalog customers see on the Takeout page.</p>
+    <p>
+      Go to <strong>Takeout Sets</strong> to manage the product catalog that customers see on the Takeout page.
+      The page is split into two panels: existing sets on the left, and an Add New Set form on the right.
+    </p>
+
+    <figure>
+      <img src="assets/screenshots/admin-takeout.png" alt="Takeout Sets management page with existing sets listed on the left (Custom Takeout Box, Vegan Delight Box, Gluten-Free Harvest with Edit and Delete buttons) and an Add New Set form on the right with fields for Name, Description, Price, and Upload Image" />
+      <figcaption>Figure 12 — Takeout Sets page. Existing sets are listed on the left with Edit and Delete actions. The right panel creates a new set.</figcaption>
+    </figure>
+
     <ul>
-      <li><strong>Add a set:</strong> fill in name, description, price, image, and availability, then click Add Set.</li>
-      <li><strong>Toggle availability:</strong> each set has an Available/Unavailable toggle. Unavailable sets are hidden from customers.</li>
-      <li><strong>Edit a set:</strong> click Edit to modify any field.</li>
-      <li><strong>Delete a set:</strong> click Delete to permanently remove a set.</li>
+      <li><strong>Add a set:</strong> fill in the Name, Description, Price, and optionally upload an image on the right panel, then click <strong>Add Set</strong>.</li>
+      <li><strong>Edit a set:</strong> click <strong>Edit</strong> on any existing set to modify its fields inline.</li>
+      <li><strong>Delete a set:</strong> click <strong>Delete</strong> to permanently remove a set. This cannot be undone.</li>
+      <li><strong>Custom Box tag:</strong> sets marked as "Custom Box" (like the Custom Takeout Box) allow customers to write in their own dish selection instead of a fixed contents list.</li>
     </ul>
 
     <h3 id="admin-staff">Staff Account Management</h3>
-    <p>Go to <strong>Manage Staff</strong> to manage who has access to the internal portal.</p>
+    <p>Go to <strong>Manage Staff</strong> to control who can log into the internal portal.</p>
 
     <figure>
       <img src="assets/screenshots/admin-staff.png" alt="Manage Staff page showing a table of current staff accounts with email, status, creation date, and action buttons (Disable, Reset Password), plus a Create Staff Account form at the bottom" />
-      <figcaption>Figure 11 — Staff Management page. Active staff accounts are listed at the top. The form at the bottom creates new staff accounts.</figcaption>
+      <figcaption>Figure 13 — Staff Management page. All staff accounts are listed at the top. The form at the bottom creates a new staff account.</figcaption>
     </figure>
 
     <h4>Creating a Staff Account</h4>
     <ol>
-      <li>Scroll to the <strong>Create Staff Account</strong> section.</li>
-      <li>Enter the staff member's email and a temporary initial password.</li>
-      <li>Click <strong>Create Staff</strong>. The account is immediately active.</li>
-      <li>Share the credentials with the new staff member securely.</li>
+      <li>Scroll to the <strong>Create Staff Account</strong> section at the bottom of the page.</li>
+      <li>Enter the staff member's email address and a temporary initial password.</li>
+      <li>Click <strong>Create Staff</strong>. The account is active immediately.</li>
+      <li>Share the email and password with the new staff member so they can log in.</li>
     </ol>
 
     <h4>Disabling an Account</h4>
     <p>
-      Click <strong>Disable</strong> next to an account. The staff member can no longer log in.
-      Their account is not deleted — click <strong>Enable</strong> to restore access.
+      Click <strong>Disable</strong> next to a staff account. That account can no longer log in.
+      The account is not deleted — click <strong>Enable</strong> to restore access at any time.
+      This is useful for temporarily suspending access without losing the account history.
     </p>
 
     <h4>Resetting a Password</h4>
     <p>
-      Click <strong>Reset Password</strong> next to an account. Enter and confirm a new temporary password.
-      Share it with the staff member so they can log in.
+      Click <strong>Reset Password</strong> next to an account. Enter and confirm a new password.
+      Share the new password with the staff member so they can log in again.
     </p>
 
     <h3 id="admin-reports">Sales Reports</h3>
-    <p>Go to <strong>Reports</strong> to view sales data. Accessible only to the Super Admin.</p>
+    <p>
+      Go to <strong>Reports</strong> to view all sales analytics. This page is only accessible to Super Admin accounts.
+      It gives a real-time overview of revenue, order volume, and product performance across any time period.
+    </p>
 
     <figure>
-      <img src="assets/screenshots/admin-reports.png" alt="Sales Analytics page showing a report range filter at the top, three KPI metric cards, a best-selling sets table, and a sidebar with status breakdown, business insights, and peak pickup windows" />
-      <figcaption>Figure 12 — Sales Analytics page. Filter by time period using the dropdown. The page shows revenue KPIs, best sellers, order status breakdown, auto-generated insights, and peak pickup times.</figcaption>
+      <img src="assets/screenshots/admin-reports.png" alt="Sales Analytics page showing a Report Range filter with dropdown and date pickers, three always-visible KPI cards for Today / This Week / This Month revenue, a period summary section with Revenue, Paid Orders and Average Order Value, and a Status Breakdown panel on the right" />
+      <figcaption>Figure 14 — Sales Analytics page. The top filter selects the reporting period. KPI cards always show Today, This Week, and This Month at a glance. The detailed summary and status breakdown update based on the selected filter.</figcaption>
     </figure>
 
+    <h4>Using the Report Filter</h4>
+    <p>
+      At the top of the page, use the <strong>Report Range</strong> dropdown to select a preset period
+      (Today, This Week, This Month) or choose <strong>Custom Range</strong> and set specific start and end dates.
+      Click <strong>Apply Filter</strong> to reload the data for that period.
+    </p>
+
+    <h4>What Each Section Shows</h4>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Report Section</th><th>What It Shows</th></tr></thead>
+        <thead><tr><th>Section</th><th>What It Shows</th><th>Why It's Useful</th></tr></thead>
         <tbody>
-          <tr><td><strong>Overview cards (top)</strong></td><td>Revenue and order count for Today, This Week, and This Month — always shown regardless of the filter</td></tr>
-          <tr><td><strong>Report Range filter</strong></td><td>Select Today / This Week / This Month / Custom Range. Click Apply Filter to update the data below.</td></tr>
-          <tr><td><strong>Summary</strong></td><td>Revenue, paid order count, and average order value for the selected period</td></tr>
-          <tr><td><strong>Best-Selling Sets</strong></td><td>Ranked table of takeout sets by units sold and revenue</td></tr>
-          <tr><td><strong>Status Breakdown</strong></td><td>Count of orders in each status for the period</td></tr>
-          <tr><td><strong>Business Insights</strong></td><td>Auto-generated text insights (e.g., top seller, underperforming sets)</td></tr>
-          <tr><td><strong>Slow-Moving Sets</strong></td><td>Available sets with the fewest orders — useful for deciding what to promote or remove</td></tr>
-          <tr><td><strong>Peak Pickup Windows</strong></td><td>Time slots with the most orders — useful for staffing</td></tr>
+          <tr>
+            <td><strong>KPI Cards (always visible)</strong></td>
+            <td>Revenue and paid order count for Today, This Week, and This Month — always displayed regardless of the filter</td>
+            <td>Quick snapshot of the business without needing to change the filter</td>
+          </tr>
+          <tr>
+            <td><strong>Period Summary</strong></td>
+            <td>Revenue, number of paid orders, and average order value for the selected filter period</td>
+            <td>Understand performance within a specific time window</td>
+          </tr>
+          <tr>
+            <td><strong>Status Breakdown</strong></td>
+            <td>Count of orders in each status (Completed, Paid, Preparing, Pending, Cancelled) for the selected period</td>
+            <td>Identify how many orders are still active vs. completed or abandoned</td>
+          </tr>
+          <tr>
+            <td><strong>Best-Selling Sets</strong></td>
+            <td>Ranked list of takeout sets by units sold and revenue generated</td>
+            <td>Know which products are driving the most revenue</td>
+          </tr>
+          <tr>
+            <td><strong>Slow-Moving Sets</strong></td>
+            <td>Available sets with the lowest number of orders</td>
+            <td>Identify products to promote, reposition, or discontinue</td>
+          </tr>
+          <tr>
+            <td><strong>Business Insights</strong></td>
+            <td>Auto-generated text summaries (e.g., top seller, underperforming items, revenue trend)</td>
+            <td>Actionable conclusions without needing to manually read the numbers</td>
+          </tr>
+          <tr>
+            <td><strong>Peak Pickup Windows</strong></td>
+            <td>Time slots with the highest order volume</td>
+            <td>Plan staffing levels around the busiest hours</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
     <h3>Cancelling an Order</h3>
     <p>
-      On the Order Queue dashboard, Super Admins see a <strong>Cancel Order</strong> button on each order card.
-      This immediately sets the order to Cancelled status.
+      On the Order Queue dashboard, Super Admins see a <strong>Cancel Order</strong> button on each active order card
+      (Staff accounts do not have this button). Clicking it immediately sets the order to Cancelled status
+      and removes it from the queue.
     </p>
     <div class="note note-danger">
-      <div class="note-title">⛔ Cancelling does not issue a Stripe refund</div>
+      <div class="note-title">⛔ Cancelling does not issue a Stripe refund automatically</div>
       Cancelling an order only changes its status in the database.
-      To refund the customer, log into the Stripe Dashboard and issue a refund manually for that payment.
+      If the customer has already paid and deserves a refund, log into the
+      <a href="https://dashboard.stripe.com/test/payments" target="_blank">Stripe Dashboard</a>,
+      find the payment, and issue a manual refund from there.
     </div>
 
     <hr />
