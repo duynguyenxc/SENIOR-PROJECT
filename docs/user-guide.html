@@ -33,6 +33,8 @@
       <a href="user-guide.html" class="nav-link active">User Guide</a>
       <a href="#overview" class="nav-sub active">UI Overview</a>
       <a href="#customer" class="nav-sub">Customer</a>
+      <a href="#customer-payment" class="nav-sub">— Payment Flow</a>
+      <a href="#customer-my-orders" class="nav-sub">— My Orders</a>
       <a href="#staff" class="nav-sub">Staff</a>
       <a href="#superadmin" class="nav-sub">Super Admin</a>
       <a href="#accessibility" class="nav-sub">Accessibility</a>
@@ -115,9 +117,13 @@
     ================================================================ -->
     <h2 id="customer">Customer Guide</h2>
     <p>
-      Customers are the general public who visit the website to place takeout orders.
-      A customer account is required to place an order. Account creation is free and instant.
+      Customers are members of the general public who visit the website to browse the menu and place takeout orders.
     </p>
+    <div class="note note-info">
+      <div class="note-title">ℹ No account needed to browse</div>
+      Anyone can view the <strong>Menu</strong> and <strong>Takeout</strong> pages without logging in.
+      An account is only required to add items to the cart and place an order. Registration is free and instant.
+    </div>
 
     <h3 id="customer-register">Step 1 — Create an Account</h3>
     <p>
@@ -130,40 +136,40 @@
     </figure>
 
     <ul>
-      <li><strong>Email</strong> — used as the login username; must be unique</li>
-      <li><strong>Full name</strong> — displayed on the order for staff</li>
-      <li><strong>Phone</strong> — optional; for staff to contact you about the order</li>
-      <li><strong>Password</strong> — minimum 6 characters; stored as a bcrypt hash in the database</li>
+      <li><strong>Email</strong> — used as the login username; must be unique across all customer accounts</li>
+      <li><strong>Full name</strong> — displayed on the order card for staff to identify the order</li>
+      <li><strong>Phone</strong> — optional; for staff to contact you if there is an issue with the order</li>
+      <li><strong>Password</strong> — minimum 6 characters; stored as a bcrypt hash, never as plain text</li>
     </ul>
 
     <div class="note note-info">
       <div class="note-title">ℹ Already have an account?</div>
-      Click <strong>Login</strong> in the navigation bar. Enter your email and password to sign in.
+      Click <strong>Login</strong> in the navigation bar instead. Enter your email and password to sign in.
     </div>
 
     <h3 id="customer-menu">Step 2 — Browse the Weekly Menu</h3>
     <p>
       Click <strong>Menu</strong> in the navigation bar to see what the restaurant is serving this week.
       The menu is organized by day — click any day tab to see that day's dishes.
-      Clicking a dish name expands it to show the full ingredient list.
+      Clicking a dish name expands it to show the full ingredient description.
     </p>
 
     <figure>
       <img src="assets/screenshots/menu.png" alt="Weekly menu page with day selector tabs (Monday through Sunday) and dish cards below showing dish images and names" />
-      <figcaption>Figure 3 — Weekly Menu page. Click any day to see its dishes. The buffet price ($17/person, $15 on Thursdays) is shown at the top.</figcaption>
+      <figcaption>Figure 3 — Weekly Menu page. Click any day tab to see its dishes. The buffet dine-in price is shown at the top of the page.</figcaption>
     </figure>
 
     <div class="note note-info">
-      <div class="note-title">ℹ Menu vs. Takeout</div>
-      The Menu page is for information only — you cannot order directly from it.
-      Ordering happens through the <strong>Takeout</strong> page.
-      Use the menu to decide which dishes to include in a Custom Takeout Box.
+      <div class="note-title">ℹ The Menu page is read-only</div>
+      The Menu page shows what dishes are available — you cannot order directly from it.
+      Use the menu to decide which dishes you want, then go to the <strong>Takeout</strong> page to order.
+      If you want a Custom Takeout Box, note down the dish names from this page to enter during checkout.
     </div>
 
     <h3 id="customer-takeout">Step 3 — Choose a Takeout Set</h3>
     <p>
-      Click <strong>Takeout</strong> in the navigation bar to see available sets.
-      There are two types:
+      Click <strong>Takeout</strong> in the navigation bar to see all available sets.
+      There are two types of takeout options:
     </p>
 
     <div class="table-wrap">
@@ -172,12 +178,12 @@
         <tbody>
           <tr>
             <td><strong>Fixed sets</strong></td>
-            <td>Pre-packaged combinations at a set price. Contents are decided by the restaurant.</td>
+            <td>Pre-packaged combinations at a fixed price. Contents are decided by the restaurant.</td>
             <td>Vegan Delight Box ($14.99), Spicy Thai Combo ($15.00), Gluten-Free Harvest ($16.50)</td>
           </tr>
           <tr>
             <td><strong>Custom Takeout Box</strong></td>
-            <td>You list up to 6 dishes from the weekly menu. Staff fulfill the first 6 items entered.</td>
+            <td>You type up to 6 dish names from the weekly menu. Staff will prepare the first 6 listed.</td>
             <td>Custom Takeout Box ($18.00)</td>
           </tr>
         </tbody>
@@ -186,67 +192,89 @@
 
     <figure>
       <img src="assets/screenshots/takeout.png" alt="Takeout menu page showing the Custom Takeout Box card and the Vegan Delight Box card, each with an image, description, price, and an Add to Cart button" />
-      <figcaption>Figure 4 — Takeout Menu page. Each set shows its name, description, image, and price. A special note field lets you add requests before clicking Add to Cart.</figcaption>
+      <figcaption>Figure 4 — Takeout page. Each set shows its name, description, price, and an Add to Cart button. An optional note field lets you enter special requests before adding.</figcaption>
     </figure>
 
     <p>
-      For each set, you can optionally enter a <strong>special note</strong> (e.g., "no peanuts", "less spicy", "pack sauce separately")
-      before clicking <strong>Add to Cart</strong>.
+      For any set, you can optionally enter a <strong>special note</strong> (e.g., "no peanuts", "less spicy", "pack sauce separately")
+      in the text field that appears on the set card before clicking <strong>Add to Cart</strong>.
     </p>
     <p>
-      For the <strong>Custom Takeout Box</strong>, type your chosen dish names in the text area
-      (one per line or comma-separated). Staff will prepare the first 6 dishes listed.
+      For the <strong>Custom Takeout Box</strong>, a text area appears where you type your chosen dish names
+      (one per line or comma-separated). Staff will prepare the first 6 dishes you list.
     </p>
 
     <div class="note note-warn">
-      <div class="note-title">⚠ You must be logged in to add items</div>
-      If you are not logged in, clicking Add to Cart redirects you to the login page.
-      Log in first, then return to the Takeout page.
+      <div class="note-title">⚠ You must be logged in to add items to cart</div>
+      If you click <strong>Add to Cart</strong> while not logged in, the page will redirect you to the login page.
+      Log in first, then return to the Takeout page and add your items.
     </div>
 
-    <h3 id="customer-cart">Step 4 — Review Your Cart</h3>
+    <h3 id="customer-cart">Step 4 — Review Your Cart and Enter Pickup Details</h3>
     <p>
-      Click <strong>Cart</strong> in the navigation bar. On this page you can:
+      Click <strong>Cart</strong> in the navigation bar to review your order before paying.
     </p>
-    <ul>
-      <li>Review all items, quantities, and prices</li>
-      <li>See the total amount</li>
-      <li>Enter your <strong>name</strong>, <strong>phone number</strong>, and <strong>preferred pickup time</strong></li>
-      <li>Add any <strong>special instructions</strong> or <strong>allergy notes</strong> for the entire order</li>
-      <li>Click <strong>Proceed to Payment</strong> to go to Stripe checkout</li>
-    </ul>
 
     <figure>
-      <img src="assets/screenshots/cart.png" alt="Cart page showing an Order Details section on the left and a Checkout form on the right with fields for name, phone, pickup time, and instructions" />
-      <figcaption>Figure 5 — Cart page. The left section lists your items; the right section collects your contact details and pickup time before payment.</figcaption>
+      <img src="assets/screenshots/cart.png" alt="Cart page showing Order Details on the left with an item, price, quantity, total, and X remove button; and a Checkout form on the right with name, phone, and pickup time fields" />
+      <figcaption>Figure 5 — Cart page. Left: your items with a remove (X) button for each. Right: fill in your name, phone number, and pickup time, then click Proceed to Payment.</figcaption>
     </figure>
 
-    <h3 id="customer-payment">Step 5 — Pay via Stripe</h3>
+    <p>On the Cart page you can:</p>
+    <ul>
+      <li>Review all items, their unit prices, quantities, and the order total</li>
+      <li>Remove any item by clicking the <strong>X</strong> button next to it</li>
+      <li>Enter your <strong>name</strong> and <strong>phone number</strong> (required for staff to identify and contact you)</li>
+      <li>Choose a <strong>pickup time</strong> — must be a time later today during operating hours</li>
+      <li>Optionally add <strong>special instructions</strong> or <strong>allergy notes</strong> that apply to the whole order</li>
+      <li>Click <strong>Proceed to Payment</strong> to continue to the Stripe payment page</li>
+    </ul>
+
+    <h3 id="customer-payment">Step 5 — Pay via Stripe Checkout</h3>
     <p>
-      Clicking <strong>Proceed to Payment</strong> takes you to Stripe's hosted payment page.
-      Enter card details and complete the payment. The system is in <strong>test mode</strong> — no real money is charged.
+      Clicking <strong>Proceed to Payment</strong> creates your order in the database (status: <em>Pending</em>)
+      and redirects you to Stripe's hosted payment page. This page is served by Stripe — your payment
+      details are entered directly on Stripe's servers, not on the Veg Buffet server.
     </p>
 
+    <figure>
+      <img src="assets/screenshots/stripe-checkout.png" alt="Stripe Checkout page showing the order summary on the left (Vegan Delight Box, $14.99) and payment options on the right including Card, Cash App Pay, Klarna, and Bank, with a Pay button at the bottom" />
+      <figcaption>Figure 6 — Stripe Checkout page. Your order summary is shown on the left. Select <strong>Card</strong> as the payment method, enter the test card details, and click Pay.</figcaption>
+    </figure>
+
+    <p>
+      Select <strong>Card</strong> as the payment method. For testing, use the following card details
+      (no real money is charged — these are Stripe's official test values):
+    </p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Card Field</th><th>Test Value</th></tr></thead>
+        <thead><tr><th>Card Field</th><th>Test Value to Enter</th></tr></thead>
         <tbody>
           <tr><td>Card number</td><td><code>4242 4242 4242 4242</code></td></tr>
-          <tr><td>Expiry</td><td>Any future date</td></tr>
-          <tr><td>CVC</td><td>Any 3 digits</td></tr>
+          <tr><td>Expiry date</td><td>Any future date — e.g., <code>12/29</code></td></tr>
+          <tr><td>CVC</td><td>Any 3 digits — e.g., <code>123</code></td></tr>
+          <tr><td>Cardholder name</td><td>Any name</td></tr>
         </tbody>
       </table>
     </div>
-
     <p>
-      After payment, Stripe redirects back to the <strong>order confirmation page</strong>
-      showing your order number and a real-time status tracker.
+      Click <strong>Pay</strong>. Stripe processes the payment and redirects you back to the
+      order confirmation page on the Veg Buffet site. Your order status changes from <em>Pending</em> to <em>Paid</em>,
+      and it appears in the staff queue immediately.
     </p>
+
+    <div class="note note-info">
+      <div class="note-title">ℹ If you leave the Stripe page without paying</div>
+      If you close or navigate away from the Stripe page before completing payment, your order remains
+      in <strong>Pending</strong> status. You can go to <strong>My Orders</strong> to either
+      <strong>Resume Payment</strong> (returns to the Stripe page) or <strong>Cancel Order</strong>
+      to discard it.
+    </div>
 
     <h3 id="customer-tracking">Step 6 — Track Your Order</h3>
     <p>
-      The confirmation page shows the current order status and updates automatically without
-      needing to refresh the page.
+      After payment, you are redirected to the order confirmation page which shows your order number
+      and a real-time status tracker. The status updates automatically — no need to refresh the page.
     </p>
     <div class="flow">
       <span class="flow-step">Paid</span>
@@ -257,10 +285,25 @@
       <span class="flow-arrow">→</span>
       <span class="flow-step">Completed</span>
     </div>
+
+    <h3 id="customer-my-orders">My Orders</h3>
     <p>
-      You can also view all past orders at any time by clicking <strong>My Orders</strong> in the navigation bar
-      (only visible when logged in).
+      Click <strong>My Orders</strong> in the navigation bar (only visible when logged in) to see
+      a full history of all your orders, newest first.
     </p>
+
+    <figure>
+      <img src="assets/screenshots/my-orders.png" alt="My Orders page showing two order cards: Order #005 with Paid status showing 1x Vegan Delight Box, and Order #004 with Pending status showing a yellow note about incomplete payment with Resume Payment and Cancel Order buttons" />
+      <figcaption>Figure 7 — My Orders page. Each card shows order number, pickup time, total, items, and current status. Orders with incomplete payment show a Resume Payment option.</figcaption>
+    </figure>
+
+    <p>Each order card shows:</p>
+    <ul>
+      <li>Order number, pickup time, total amount, and the date/time the order was placed</li>
+      <li>Items included in the order</li>
+      <li>Current status (color-coded badge: Paid, Pending, Preparing, Ready, Completed, Cancelled)</li>
+      <li>For <strong>Pending</strong> orders (payment not completed): a note explaining the situation, with a <strong>Resume Payment</strong> button to return to Stripe, and a <strong>Cancel Order</strong> button to discard the order</li>
+    </ul>
 
     <hr />
 
@@ -287,7 +330,7 @@
 
     <figure>
       <img src="assets/screenshots/admin-login.png" alt="Internal Staff Portal login page with a form containing Staff Email and Password fields and an Access Dashboard button" />
-      <figcaption>Figure 6 — Staff Portal login page. Only accounts created by the Super Admin can log in here. Customer accounts do not work here.</figcaption>
+      <figcaption>Figure 8 — Staff Portal login page. Only accounts created by the Super Admin can log in here. Customer accounts do not work here.</figcaption>
     </figure>
 
     <h3>The Order Fulfillment Dashboard</h3>
@@ -301,7 +344,7 @@
 
     <figure>
       <img src="assets/screenshots/admin-dashboard.png" alt="Admin order fulfillment dashboard showing three KPI metric cards at the top and an active order queue below with order cards" />
-      <figcaption>Figure 7 — Order Fulfillment Dashboard. KPI cards at top summarize today's activity. Active orders appear as cards below. The page auto-updates when new orders arrive.</figcaption>
+      <figcaption>Figure 9 — Order Fulfillment Dashboard. KPI cards at top summarize today's activity. Active orders appear as cards below. The page auto-updates when new orders arrive.</figcaption>
     </figure>
 
     <h3>Reading an Order Card</h3>
@@ -401,7 +444,7 @@
 
     <figure>
       <img src="assets/screenshots/admin-menu.png" alt="Menu Builder page showing a vertical list of day buttons on the left side (Monday highlighted), with a form to add dishes on the right" />
-      <figcaption>Figure 8 — Menu Builder. Select a day on the left to see its current dishes and a form to add new ones.</figcaption>
+      <figcaption>Figure 10 — Menu Builder. Select a day on the left to see its current dishes and a form to add new ones.</figcaption>
     </figure>
 
     <p>How to use:</p>
@@ -430,7 +473,7 @@
 
     <figure>
       <img src="assets/screenshots/admin-staff.png" alt="Manage Staff page showing a table of current staff accounts with email, status, creation date, and action buttons (Disable, Reset Password), plus a Create Staff Account form at the bottom" />
-      <figcaption>Figure 9 — Staff Management page. Active staff accounts are listed at the top. The form at the bottom creates new staff accounts.</figcaption>
+      <figcaption>Figure 11 — Staff Management page. Active staff accounts are listed at the top. The form at the bottom creates new staff accounts.</figcaption>
     </figure>
 
     <h4>Creating a Staff Account</h4>
@@ -458,7 +501,7 @@
 
     <figure>
       <img src="assets/screenshots/admin-reports.png" alt="Sales Analytics page showing a report range filter at the top, three KPI metric cards, a best-selling sets table, and a sidebar with status breakdown, business insights, and peak pickup windows" />
-      <figcaption>Figure 10 — Sales Analytics page. Filter by time period using the dropdown. The page shows revenue KPIs, best sellers, order status breakdown, auto-generated insights, and peak pickup times.</figcaption>
+      <figcaption>Figure 12 — Sales Analytics page. Filter by time period using the dropdown. The page shows revenue KPIs, best sellers, order status breakdown, auto-generated insights, and peak pickup times.</figcaption>
     </figure>
 
     <div class="table-wrap">
