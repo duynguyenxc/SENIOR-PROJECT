@@ -1,0 +1,28 @@
+{
+  "name": "senior-project",
+  "version": "1.0.0",
+  "description": "[![Live Demo](https://img.shields.io/badge/Live%20Demo-veg--buffet--web.onrender.com-2e7d32?style=for-the-badge)](https://veg-buffet-web.onrender.com/) [![User Manual](https://img.shields.io/badge/User%20Manual-docs-1d4ed8?style=for-the-badge)](https://duynguyenxc.github.io/SENIOR-PROJECT/)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duynguyenxc/SENIOR-PROJECT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/duynguyenxc/SENIOR-PROJECT/issues"
+  },
+  "homepage": "https://github.com/duynguyenxc/SENIOR-PROJECT#readme",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "puppeteer-core": "^24.42.0"
+  }
+}
