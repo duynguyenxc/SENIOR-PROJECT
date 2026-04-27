@@ -160,7 +160,8 @@ const PRINT_CSS = `
     font-family: 'Consolas', 'Courier New', monospace !important;
     font-size: 8.5pt !important;
     white-space: pre-wrap !important;
-    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
   }
   code {
     background: #f3f4f6 !important;
