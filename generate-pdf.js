@@ -161,12 +161,26 @@ const PRINT_CSS = `
     font-size: 8.5pt !important;
     white-space: pre-wrap !important;
     word-break: break-all !important;
-    background: #f8f8f8 !important;
+  }
+  code {
+    background: #f3f4f6 !important;
     border: 1px solid #e0e0e0 !important;
     border-radius: 3px !important;
-    padding: 1px 4px !important;
+    padding: 1px 5px !important;
   }
-  pre { padding: 8px 10px !important; }
+  pre {
+    background: #f8f8f8 !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 9px 12px !important;
+    line-height: 1.55 !important;
+  }
+  pre code {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
   img { max-width: 100% !important; height: auto !important; page-break-inside: avoid; }
   a   { color: #1d4ed8 !important; text-decoration: none !important; }
 
