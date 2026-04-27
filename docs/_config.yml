@@ -1,4 +1,1 @@
-# GitHub Pages configuration
-# This file tells GitHub Pages to serve the docs/ folder as a website.
-# No Jekyll theme is used - the site is plain HTML/CSS.
 theme: null
