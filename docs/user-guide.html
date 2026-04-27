@@ -290,6 +290,7 @@
           <tr><td>Expiry date</td><td>Any future date — e.g., <code>12/29</code></td></tr>
           <tr><td>CVC</td><td>Any 3 digits — e.g., <code>123</code></td></tr>
           <tr><td>Cardholder name</td><td>Any name</td></tr>
+          <tr><td>Billing ZIP / postal code</td><td>Any value — e.g., <code>12345</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -369,12 +370,26 @@
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <thead><tr><th>Portal</th><th>Email</th><th>Password</th></tr></thead>
         <tbody>
-          <tr><td>Email</td><td><code>staff@vegbuffet.com</code></td></tr>
-          <tr><td>Password</td><td><code>password</code></td></tr>
+          <tr>
+            <td><strong>Live site</strong></td>
+            <td><code>staff@vegbuffet.com</code></td>
+            <td><code>password</code></td>
+          </tr>
+          <tr>
+            <td><strong>Local (Docker)</strong></td>
+            <td><code>admin@vegbuffet.com</code></td>
+            <td><code>password</code></td>
+          </tr>
         </tbody>
       </table>
+    </div>
+    <div class="note note-info">
+      <div class="note-title">ℹ Local Docker uses the Super Admin account</div>
+      The local Docker seed data only creates the Super Admin account (<code>admin@vegbuffet.com</code>).
+      Use that account to explore the staff portal — the Super Admin can do everything Staff can do, plus more.
+      To test a pure Staff account locally, log in as Super Admin first, go to <strong>Manage Staff</strong>, and create a staff account.
     </div>
 
     <figure>
@@ -389,7 +404,7 @@
     </p>
 
     <figure>
-      <img src="assets/screenshots/admin-dashboard.png" alt="Staff Active Fulfillment Queue page showing three KPI cards (Today's Revenue, Completed Today, Active Queue) and an order card for Order #005 with customer name, phone, total, pickup time, items, and Start Preparing button" />
+      <img src="assets/screenshots/admin-dashboard.png" alt="Staff Active Fulfillment Queue page showing three revenue summary cards (Today's Revenue, Completed Today, Active Queue) and an order card for Order #005 with customer name, phone, total, pickup time, items, and Start Preparing button" />
       <figcaption>Figure 9 — Active Fulfillment Queue. The three cards at the top summarize today's activity. Each order card below shows all details needed to fulfill the order. The page refreshes automatically when new orders arrive.</figcaption>
     </figure>
 
