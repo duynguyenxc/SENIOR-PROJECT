@@ -31,7 +31,8 @@
     <div class="nav-group">
       <div class="nav-group-title">Use</div>
       <a href="user-guide.html" class="nav-link active">User Guide</a>
-      <a href="#overview" class="nav-sub active">UI Overview</a>
+      <a href="#user-types" class="nav-sub active">User Types</a>
+      <a href="#overview" class="nav-sub">UI Overview</a>
       <a href="#customer" class="nav-sub">Customer</a>
       <a href="#customer-payment" class="nav-sub">— Payment Flow</a>
       <a href="#customer-my-orders" class="nav-sub">— My Orders</a>
@@ -56,10 +57,45 @@
 
     <h1>User Guide</h1>
     <p class="page-intro">
-      This section describes the user interface structure and functionality for all three types of users:
-      <strong>Customer</strong>, <strong>Staff</strong>, and <strong>Super Admin</strong>.
-      Each role has different needs and different pages available to them.
+      This section describes the user interface structure and functionality of Veg Buffet.
+      The application serves three distinct types of users, each with different needs and a different set of pages available to them.
     </p>
+
+    <h2 id="user-types">User Types</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>User Type</th><th>Who They Are</th><th>Primary Need</th><th>How They Access the System</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>General Public / Customer</strong></td>
+            <td>Anyone visiting the website — no account required to browse</td>
+            <td>Browse the weekly menu, order takeout sets, and track their order status</td>
+            <td>Customer website — <code>veg-buffet-web.onrender.com</code></td>
+          </tr>
+          <tr>
+            <td><strong>Staff</strong></td>
+            <td>Restaurant employees assigned by the Super Admin</td>
+            <td>See incoming paid orders and advance them through preparation stages until pickup</td>
+            <td>Internal staff portal — <code>/admin/login.php</code> — with staff credentials issued by Super Admin</td>
+          </tr>
+          <tr>
+            <td><strong>Super Admin</strong></td>
+            <td>The restaurant owner or manager</td>
+            <td>Manage the menu, takeout catalog, staff accounts, and monitor sales performance</td>
+            <td>Same internal portal — full access to all management pages not visible to Staff</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Each user type sees a completely different set of pages and controls.
+      Customers and staff/admins use separate websites with separate login systems —
+      a customer account cannot be used to log into the staff portal, and vice versa.
+    </p>
+
+    <hr />
 
     <!-- ================================================================
          UI OVERVIEW
