@@ -7,6 +7,8 @@ Veg Buffet is a web-based restaurant ordering system built as a senior project. 
 
 Live site: [https://veg-buffet-web.onrender.com/](https://veg-buffet-web.onrender.com/)
 
+User Manual: [https://duynguyenxc.github.io/SENIOR-PROJECT/](https://duynguyenxc.github.io/SENIOR-PROJECT/)
+
 ## What the project does
 
 The system is split into two main sides.
