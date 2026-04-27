@@ -167,19 +167,22 @@ const PRINT_CSS = `
     border: 1px solid #e0e0e0 !important;
     border-radius: 3px !important;
     padding: 1px 5px !important;
+    color: #1a1a1a !important;
   }
   pre {
-    background: #f8f8f8 !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 4px !important;
-    padding: 9px 12px !important;
-    line-height: 1.55 !important;
+    background: #1e2030 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 12px 15px !important;
+    line-height: 1.6 !important;
+    color: #cdd6f4 !important;
   }
   pre code {
     background: none !important;
     border: none !important;
     padding: 0 !important;
     border-radius: 0 !important;
+    color: #cdd6f4 !important;
   }
   img { max-width: 100% !important; height: auto !important; page-break-inside: avoid; }
   a   { color: #1d4ed8 !important; text-decoration: none !important; }
