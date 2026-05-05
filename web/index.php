@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+// Homepage — shows a welcome hero, business hours, and buffet pricing.
+
 require_once __DIR__ . '/lib/layout.php';
 
 $cust = current_customer();

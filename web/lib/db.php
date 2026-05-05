@@ -1,12 +1,18 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Returns a shared PDO connection to the database.
+ * Connection details come from environment variables, with local defaults.
+ * Supports SSL for cloud-hosted databases (e.g. Render + Aiven).
+ */
 function db(): PDO {
   static $pdo = null;
   if ($pdo instanceof PDO) {
     return $pdo;
   }
 
+  // Read connection info from env, fall back to local defaults
   $host = getenv('DB_HOST') !== false ? (string)getenv('DB_HOST') : '127.0.0.1';
   $port = getenv('DB_PORT') !== false ? (string)getenv('DB_PORT') : '3306';
   $name = getenv('DB_NAME') !== false ? (string)getenv('DB_NAME') : 'vegbuffet';
@@ -24,6 +30,7 @@ function db(): PDO {
     PDO::ATTR_EMULATE_PREPARES => false,
   ];
 
+  // Attach SSL cert when deploying to a remote DB that requires it
   if (defined('PDO::MYSQL_ATTR_SSL_CA') && $sslCaPath !== '') {
     $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCaPath;
   }
@@ -36,4 +43,3 @@ function db(): PDO {
 
   return $pdo;
 }
-

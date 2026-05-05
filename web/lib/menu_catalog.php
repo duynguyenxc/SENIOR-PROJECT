@@ -1,8 +1,13 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * CRUD operations for the weekly menu (days, dishes, day-dish mappings).
+ */
+
 require_once __DIR__ . '/db.php';
 
+/** Get all days ordered Mon-Sun. */
 function fetch_days(PDO $pdo): array {
   return $pdo->query('SELECT dayId, dayName, sortOrder FROM Day ORDER BY sortOrder')->fetchAll();
 }
@@ -15,6 +20,7 @@ function fetch_day_by_id(PDO $pdo, int $dayId): ?array {
   return is_array($day) ? $day : null;
 }
 
+/** Fetch the full dish catalog, optionally filtering to active-only. */
 function fetch_all_dishes(PDO $pdo, bool $activeOnly = false): array {
   $sql = 'SELECT dishId, dishName, description, imageUrl, isActive
           FROM Dish';
@@ -52,6 +58,7 @@ function fetch_dish_by_name(PDO $pdo, string $dishName): ?array {
   return is_array($dish) ? $dish : null;
 }
 
+/** Get the active dishes assigned to a specific day (for the public menu page). */
 function fetch_day_menu_dishes(PDO $pdo, int $dayId): array {
   $stmt = $pdo->prepare(
     'SELECT
@@ -83,6 +90,10 @@ function create_dish(PDO $pdo, string $name, string $description, ?string $image
   ]);
 }
 
+/**
+ * Create a dish if it doesn't exist (by name), or update it if it does,
+ * then link it to the given day. Used by the admin menu builder.
+ */
 function create_or_update_dish_for_day(PDO $pdo, int $dayId, string $name, string $description, ?string $imageUrl): void {
   $name = trim($name);
   if ($name === '') {
@@ -122,11 +133,13 @@ function update_dish(PDO $pdo, int $dishId, string $name, string $description, ?
   ]);
 }
 
+/** Link a dish to a day (INSERT IGNORE prevents duplicates). */
 function add_dish_to_day(PDO $pdo, int $dayId, int $dishId): void {
   $stmt = $pdo->prepare('INSERT IGNORE INTO DayMenuItem (dayId, dishId) VALUES (?, ?)');
   $stmt->execute([$dayId, $dishId]);
 }
 
+/** Remove a dish from a specific day (does not delete the dish itself). */
 function remove_day_menu_item(PDO $pdo, int $dayMenuItemId): void {
   $stmt = $pdo->prepare('DELETE FROM DayMenuItem WHERE dayMenuItemId = ?');
   $stmt->execute([$dayMenuItemId]);

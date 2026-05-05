@@ -1,8 +1,14 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * CRUD for takeout sets (the pre-built meal boxes customers can order).
+ * Includes support for the "custom box" option where customers pick their own dishes.
+ */
+
 require_once __DIR__ . '/db.php';
 
+/** Look up a takeout set by name (used to enforce unique names). */
 function fetch_takeout_set_by_name(PDO $pdo, string $setName, ?int $excludeSetId = null): ?array {
   $sql = 'SELECT
             setId,
@@ -18,6 +24,7 @@ function fetch_takeout_set_by_name(PDO $pdo, string $setName, ?int $excludeSetId
           WHERE setName = ?';
   $params = [trim($setName)];
 
+  // Exclude a specific set (used during updates to allow the set to keep its own name)
   if ($excludeSetId !== null && $excludeSetId > 0) {
     $sql .= ' AND setId <> ?';
     $params[] = $excludeSetId;
@@ -32,12 +39,14 @@ function fetch_takeout_set_by_name(PDO $pdo, string $setName, ?int $excludeSetId
   return is_array($set) ? $set : null;
 }
 
+/** Throw if the name is already taken by another set. */
 function assert_takeout_set_name_is_available(PDO $pdo, string $setName, ?int $excludeSetId = null): void {
   if (fetch_takeout_set_by_name($pdo, $setName, $excludeSetId) !== null) {
     throw new RuntimeException('A takeout set with that name already exists. Please choose a different name.');
   }
 }
 
+/** Get all takeout sets (optionally only visible/available ones for the public page). */
 function fetch_all_takeout_sets(PDO $pdo, bool $visibleOnly = false): array {
   $sql = 'SELECT
             setId,
@@ -134,6 +143,7 @@ function delete_takeout_set(PDO $pdo, int $setId): void {
   $stmt->execute([$setId]);
 }
 
+/** Find the first takeout set that allows custom dish selection (the "custom box"). */
 function fetch_custom_takeout_set(PDO $pdo): ?array {
   $stmt = $pdo->query(
     'SELECT

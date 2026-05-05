@@ -1,5 +1,10 @@
 <?php
 declare(strict_types=1);
+
+// Admin dashboard — active order fulfillment queue.
+// Staff can advance orders through statuses: Paid > Preparing > Ready > Completed.
+// SuperAdmin can also cancel orders from here.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/orders.php';
 require_once __DIR__ . '/../lib/reporting.php';

@@ -1,13 +1,22 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Sales reporting and analytics queries used by the admin reports page.
+ * Supports date-range filtering (today, this week, this month, custom).
+ */
+
 require_once __DIR__ . '/orders.php';
 
+// --- Date range helpers ---
+
+/** Validate the report range parameter. */
 function normalized_report_range(?string $range): string {
   $allowedRanges = ['today', 'week', 'month', 'custom'];
   return in_array($range, $allowedRanges, true) ? $range : 'week';
 }
 
+/** Calculate start and end dates based on the chosen range preset. */
 function report_date_bounds(string $range, ?string $startDate = null, ?string $endDate = null): array {
   $today = new DateTimeImmutable('today');
 
@@ -23,6 +32,7 @@ function report_date_bounds(string $range, ?string $startDate = null, ?string $e
   };
 }
 
+/** Parse a Y-m-d date string into a DateTimeImmutable (returns null on bad input). */
 function report_input_date(?string $date): ?DateTimeImmutable {
   if (!is_string($date) || $date === '') {
     return null;
@@ -32,10 +42,12 @@ function report_input_date(?string $date): ?DateTimeImmutable {
   return $parsed instanceof DateTimeImmutable ? $parsed : null;
 }
 
+/** Convert start/end dates into SQL-ready boundaries (start inclusive, end exclusive). */
 function report_date_filters(DateTimeImmutable $startDate, DateTimeImmutable $endDate): array {
   $normalizedStart = $startDate->setTime(0, 0, 0);
   $normalizedEnd = $endDate->setTime(0, 0, 0);
 
+  // Swap if start > end
   if ($normalizedStart > $normalizedEnd) {
     [$normalizedStart, $normalizedEnd] = [$normalizedEnd, $normalizedStart];
   }
@@ -46,6 +58,9 @@ function report_date_filters(DateTimeImmutable $startDate, DateTimeImmutable $en
   ];
 }
 
+// --- Report data queries ---
+
+/** Get headline KPI numbers: order count, total revenue, average order value. */
 function fetch_sales_kpi(PDO $pdo, DateTimeImmutable $startDate, DateTimeImmutable $endDate): array {
   [$start, $endExclusive] = report_date_filters($startDate, $endDate);
   $countedStatuses = order_counted_revenue_statuses();
@@ -70,6 +85,7 @@ function fetch_sales_kpi(PDO $pdo, DateTimeImmutable $startDate, DateTimeImmutab
   ];
 }
 
+/** Count orders grouped by status for the status breakdown widget. */
 function fetch_status_breakdown(PDO $pdo, DateTimeImmutable $startDate, DateTimeImmutable $endDate): array {
   [$start, $endExclusive] = report_date_filters($startDate, $endDate);
 
@@ -91,6 +107,7 @@ function fetch_status_breakdown(PDO $pdo, DateTimeImmutable $startDate, DateTime
   return $breakdown;
 }
 
+/** Top N takeout sets ranked by units sold. */
 function fetch_best_selling_sets(PDO $pdo, DateTimeImmutable $startDate, DateTimeImmutable $endDate, int $limit = 5): array {
   [$start, $endExclusive] = report_date_filters($startDate, $endDate);
   $countedStatuses = order_counted_revenue_statuses();
@@ -116,6 +133,7 @@ function fetch_best_selling_sets(PDO $pdo, DateTimeImmutable $startDate, DateTim
   return $stmt->fetchAll();
 }
 
+/** Sets that are still available but have the fewest orders (need attention). */
 function fetch_low_selling_available_sets(PDO $pdo, DateTimeImmutable $startDate, DateTimeImmutable $endDate, int $limit = 3): array {
   [$start, $endExclusive] = report_date_filters($startDate, $endDate);
   $countedStatuses = order_counted_revenue_statuses();
@@ -142,6 +160,7 @@ function fetch_low_selling_available_sets(PDO $pdo, DateTimeImmutable $startDate
   return $stmt->fetchAll();
 }
 
+/** Which hours of the day see the most pickup demand. */
 function fetch_peak_pickup_windows(PDO $pdo, DateTimeImmutable $startDate, DateTimeImmutable $endDate, int $limit = 3): array {
   [$start, $endExclusive] = report_date_filters($startDate, $endDate);
   $countedStatuses = order_counted_revenue_statuses();
@@ -163,6 +182,7 @@ function fetch_peak_pickup_windows(PDO $pdo, DateTimeImmutable $startDate, DateT
   return $stmt->fetchAll();
 }
 
+/** Quick overview widget: KPIs for today, this week, and this month. */
 function fetch_report_overview(PDO $pdo): array {
   $today = new DateTimeImmutable('today');
 
@@ -173,6 +193,7 @@ function fetch_report_overview(PDO $pdo): array {
   ];
 }
 
+/** Generate a few plain-English insight sentences for the report sidebar. */
 function build_report_insights(array $selectedKpi, array $bestSellers, array $lowSellingSets, array $pickupWindows): array {
   $insights = [];
 

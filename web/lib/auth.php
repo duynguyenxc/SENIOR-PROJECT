@@ -1,8 +1,15 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Authentication and session management for both customer and admin users.
+ */
+
 require_once __DIR__ . '/db.php';
 
+// --- Session setup ---
+
+/** Check if the current request is served over HTTPS (direct or behind a proxy). */
 function session_should_use_secure_cookie(): bool {
   $https = $_SERVER['HTTPS'] ?? '';
   if (is_string($https) && $https !== '' && strtolower($https) !== 'off') {
@@ -13,6 +20,7 @@ function session_should_use_secure_cookie(): bool {
   return is_string($forwardedProto) && strtolower($forwardedProto) === 'https';
 }
 
+/** Start the session with secure cookie settings if it hasn't started yet. */
 function ensure_session_started(): void {
   if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
@@ -24,6 +32,9 @@ function ensure_session_started(): void {
   }
 }
 
+// --- Customer auth ---
+
+/** Return the logged-in customer's session data, or null if not logged in. */
 function current_customer(): ?array {
   ensure_session_started();
   if (!isset($_SESSION['customer'])) return null;
@@ -31,6 +42,7 @@ function current_customer(): ?array {
   return $_SESSION['customer'];
 }
 
+/** Sanitize a redirect target to prevent open-redirect attacks. */
 function safe_redirect_target(?string $target, string $default = '/'): string {
   if (!is_string($target) || $target === '') return $default;
   if ($target[0] !== '/') return $default;
@@ -38,6 +50,7 @@ function safe_redirect_target(?string $target, string $default = '/'): string {
   return $target;
 }
 
+/** Render a standalone error page (used for access-denied scenarios). */
 function exit_with_html_error_page(
   int $statusCode,
   string $title,
@@ -76,6 +89,7 @@ function exit_with_html_error_page(
   exit;
 }
 
+/** Require a logged-in customer; redirect to login page if not authenticated. */
 function require_customer(?string $redirectTo = null): array {
   $cust = current_customer();
   if ($cust !== null) return $cust;
@@ -84,6 +98,7 @@ function require_customer(?string $redirectTo = null): array {
   exit;
 }
 
+/** Save customer info into the session after successful login. */
 function login_customer(array $customerRow): void {
   ensure_session_started();
   session_regenerate_id(true);
@@ -99,6 +114,12 @@ function logout_customer(): void {
   unset($_SESSION['customer']);
 }
 
+// --- Admin/Staff auth ---
+
+/**
+ * Return the current admin's session data, or null.
+ * Re-validates against the database on every request to catch deactivated accounts.
+ */
 function current_admin(): ?array {
   ensure_session_started();
   if (!isset($_SESSION['admin'])) return null;
@@ -110,6 +131,7 @@ function current_admin(): ?array {
     return null;
   }
 
+  // Re-check DB so a deactivated account is immediately locked out
   try {
     $stmt = db()->prepare('SELECT adminId, email, role, isActive FROM Admin WHERE adminId = ? LIMIT 1');
     $stmt->execute([$adminId]);
@@ -132,6 +154,7 @@ function current_admin(): ?array {
   return $_SESSION['admin'];
 }
 
+/** Require an admin session; redirect to the admin login if not authenticated. */
 function require_admin(): array {
   $admin = current_admin();
   if ($admin !== null) return $admin;
@@ -143,6 +166,7 @@ function is_super_admin(?array $admin): bool {
   return is_array($admin) && (($admin['role'] ?? '') === 'SuperAdmin');
 }
 
+/** Require SuperAdmin access; show an access-denied page for regular Staff. */
 function require_super_admin(): array {
   $admin = require_admin();
   if (is_super_admin($admin)) {
@@ -159,6 +183,7 @@ function require_super_admin(): array {
   );
 }
 
+/** Save admin info into the session after successful login. */
 function login_admin(array $row): void {
   ensure_session_started();
   session_regenerate_id(true);

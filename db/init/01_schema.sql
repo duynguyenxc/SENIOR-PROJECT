@@ -1,3 +1,9 @@
+-- ============================================================
+-- Veg Buffet database schema
+-- Covers: users, weekly menu, takeout catalog, orders, payments
+-- ============================================================
+
+-- Internal accounts (SuperAdmin + Staff)
 create table if not exists Admin (
   adminId int not null auto_increment,
   email varchar(255) not null,
@@ -9,6 +15,7 @@ create table if not exists Admin (
   unique key uq_admin_email (email)
 ) engine=InnoDB;
 
+-- Customer accounts (self-registered through the public site)
 create table if not exists Customer (
   customerId int not null auto_increment,
   email varchar(255) not null,
@@ -20,6 +27,7 @@ create table if not exists Customer (
   unique key uq_customer_email (email)
 ) engine=InnoDB;
 
+-- Days of the week (used to assign dishes to specific days)
 create table if not exists Day (
   dayId int not null auto_increment,
   dayName varchar(32) not null,
@@ -29,6 +37,7 @@ create table if not exists Day (
   unique key uq_day_sort (sortOrder)
 ) engine=InnoDB;
 
+-- Master dish list (reusable across multiple days)
 create table if not exists Dish (
   dishId int not null auto_increment,
   dishName varchar(255) not null,
@@ -39,6 +48,7 @@ create table if not exists Dish (
   unique key uq_dish_name (dishName)
 ) engine=InnoDB;
 
+-- Many-to-many: which dishes appear on which day's menu
 create table if not exists DayMenuItem (
   dayMenuItemId int not null auto_increment,
   dayId int not null,
@@ -57,6 +67,7 @@ create table if not exists DayMenuItem (
     on update cascade
 ) engine=InnoDB;
 
+-- Pre-built takeout sets customers can order (also supports custom box)
 create table if not exists TakeoutSet (
   setId int not null auto_increment,
   setName varchar(255) not null,
@@ -65,21 +76,22 @@ create table if not exists TakeoutSet (
   imageUrl varchar(2048) null,
   isAvailable boolean not null,
   sortOrder int not null default 0,
-  allowsCustomSelection boolean not null default 0,
-  selectionLimit int not null default 0,
+  allowsCustomSelection boolean not null default 0, -- if true, customer picks their own dishes
+  selectionLimit int not null default 0,            -- max dishes a customer can pick
   primary key (setId),
   unique key uq_set_name (setName),
   key idx_set_available (isAvailable)
 ) engine=InnoDB;
 
+-- Orders placed by customers
 create table if not exists `Order` (
   orderId int not null auto_increment,
-  dailyOrderNumber int not null default 0,
+  dailyOrderNumber int not null default 0,  -- resets each day for easy kitchen reference
   customerId int null,
   customerName varchar(255) not null,
   customerPhone varchar(64) not null,
   pickupTime datetime not null,
-  status varchar(32) not null,
+  status varchar(32) not null,              -- Pending > Paid > Preparing > Ready > Completed | Cancelled
   totalAmount decimal(10,2) not null default 0.00,
   specialInstructions text null,
   allergyNotes text null,
@@ -93,15 +105,16 @@ create table if not exists `Order` (
   key idx_order_pickup (pickupTime)
 ) engine=InnoDB;
 
+-- Individual line items within an order
 create table if not exists OrderItem (
   orderItemId int not null auto_increment,
   orderId int not null,
-  setId int null,
-  lineType varchar(32) not null default 'set',
+  setId int null,                            -- nullable: set may be deleted after order is placed
+  lineType varchar(32) not null default 'set', -- 'set' or 'custom'
   lineLabel varchar(255) not null,
   unitPrice decimal(10,2) not null default 0.00,
   lineDescription text null,
-  lineNotes text null,
+  lineNotes text null,                       -- per-item customer notes (allergy, preferences)
   imageUrl varchar(2048) null,
   quantity int not null,
   primary key (orderItemId),
@@ -117,11 +130,12 @@ create table if not exists OrderItem (
     on update cascade
 ) engine=InnoDB;
 
+-- Payment records linked 1:1 with orders
 create table if not exists Payment (
   paymentId int not null auto_increment,
   orderId int not null,
   paymentStatus varchar(64) not null,
-  referenceId varchar(255) not null,
+  referenceId varchar(255) not null,         -- Stripe session id or mock id
   primary key (paymentId),
   unique key uq_payment_reference (referenceId),
   unique key uq_payment_order (orderId),
@@ -130,4 +144,3 @@ create table if not exists Payment (
     on delete cascade
     on update cascade
 ) engine=InnoDB;
-

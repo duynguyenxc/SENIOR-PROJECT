@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Customer login page.
+// Validates credentials, starts session, then redirects to the intended page.
+
 require_once __DIR__ . '/lib/layout.php';
 ensure_session_started();
 

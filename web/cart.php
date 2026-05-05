@@ -1,5 +1,10 @@
 <?php
 declare(strict_types=1);
+
+// Shopping cart page.
+// Handles add/remove actions via POST, then displays the current cart
+// with a checkout form (name, phone, pickup time) for logged-in customers.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/orders.php';
 require_once __DIR__ . '/lib/takeout_catalog.php';

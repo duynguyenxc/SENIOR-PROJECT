@@ -1,5 +1,7 @@
+# PHP 8.3 + Apache image for serving the web application
 FROM php:8.3-apache
 
+# Install SSL certs (needed for remote DB connections) and the PDO MySQL driver
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
@@ -15,4 +17,3 @@ RUN chmod +x /usr/local/bin/render-start.sh \
  && chown -R www-data:www-data /var/www/html
 
 CMD ["render-start.sh"]
-

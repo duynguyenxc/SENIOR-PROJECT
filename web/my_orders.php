@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Customer order history page.
+// Shows all orders for the logged-in customer with live status updates via SSE.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/orders.php';
 $cust = require_customer();

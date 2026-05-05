@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Public takeout menu — displays available takeout sets.
+// Customers can add pre-built sets or build a custom box from here.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/takeout_catalog.php';
 ensure_session_started();

@@ -1,5 +1,10 @@
 <?php
 declare(strict_types=1);
+
+// Checkout handler (POST only).
+// Creates an Order from the current cart, clears the cart,
+// and redirects to pay.php for payment.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/csrf.php';
 require_once __DIR__ . '/lib/orders.php';

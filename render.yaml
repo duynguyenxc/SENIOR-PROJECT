@@ -1,3 +1,5 @@
+# Render.com deployment config
+# Deploys the web service as a Docker container with env vars for DB and Stripe
 services:
   - type: web
     name: veg-buffet-web

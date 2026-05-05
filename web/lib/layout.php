@@ -1,14 +1,24 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Shared HTML layout: header (nav bar) and footer.
+ * Included by every public and admin page.
+ */
+
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/csrf.php';
 require_once __DIR__ . '/orders.php';
 
+/** Shorthand for HTML-escaping a string. */
 function h(string $s): string {
   return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+/**
+ * Render the opening HTML, <head>, and top navigation bar.
+ * Navigation links change depending on whether a customer or admin is logged in.
+ */
 function render_header(string $title): void {
   $cust = current_customer();
   $admin = current_admin();
@@ -31,6 +41,7 @@ function render_header(string $title): void {
         </div>
         <nav class="nav">
           <?php if ($admin): ?>
+            <!-- Admin/staff navigation -->
             <a href="/admin/index.php" class="nav-link">Orders</a>
             <a href="/admin/history.php" class="nav-link">Recent Orders</a>
             <?php if (is_super_admin($admin)): ?>
@@ -42,6 +53,7 @@ function render_header(string $title): void {
             <span class="nav-text nav-role"><?= h($admin['role']) ?></span>
             <a class="nav-link nav-link-spaced" href="/logout.php">Logout</a>
           <?php else: ?>
+            <!-- Customer navigation -->
             <a href="/" class="nav-link">Home</a>
             <a href="/menu.php" class="nav-link">Menu</a>
             <a href="/takeout.php" class="nav-link">Takeout</a>
@@ -63,6 +75,7 @@ function render_header(string $title): void {
   <?php
 }
 
+/** Close the <main> and <body> tags opened by render_header(). */
 function render_footer(): void {
   ?>
     </main>
@@ -70,4 +83,3 @@ function render_footer(): void {
   </html>
   <?php
 }
-

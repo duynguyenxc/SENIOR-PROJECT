@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Server-Sent Events (SSE) endpoint for the admin order queue.
+// Works the same way as the customer SSE stream but monitors the active queue statuses.
+
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/orders.php';
 

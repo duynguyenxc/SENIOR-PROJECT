@@ -1,5 +1,10 @@
 <?php
 declare(strict_types=1);
+
+// Menu Builder (SuperAdmin only).
+// Manage which dishes appear on each day of the week.
+// Can create new dishes with images and add/remove them from days.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/menu_catalog.php';
 require_once __DIR__ . '/../lib/upload.php';

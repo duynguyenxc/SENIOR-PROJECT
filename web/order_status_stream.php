@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+// Server-Sent Events (SSE) endpoint for the customer "My Orders" page.
+// Polls the database every 2 seconds and pushes an event when order data changes,
+// which triggers a page reload on the client.
+
 require_once __DIR__ . '/lib/auth.php';
 require_once __DIR__ . '/lib/orders.php';
 

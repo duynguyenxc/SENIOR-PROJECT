@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Customer registration page.
+// Creates a new Customer row, logs them in, and redirects.
+
 require_once __DIR__ . '/lib/layout.php';
 
 ensure_session_started();

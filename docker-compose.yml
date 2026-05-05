@@ -1,4 +1,10 @@
+# ============================================================
+# Docker Compose for local development
+# Services: MariaDB, phpMyAdmin, PHP/Apache web server
+# ============================================================
+
 services:
+  # MariaDB database
   db:
     image: mariadb:11.4
     environment:
@@ -10,13 +16,14 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db/init:/docker-entrypoint-initdb.d:ro  # Auto-runs schema + seed on first start
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 3s
       retries: 20
 
+  # phpMyAdmin for quick database inspection
   phpmyadmin:
     image: phpmyadmin:5
     environment:
@@ -29,6 +36,7 @@ services:
       db:
         condition: service_healthy
 
+  # PHP/Apache web application
   web:
     build:
       context: ./web
@@ -39,16 +47,15 @@ services:
       DB_USER: app
       DB_PASS: apppass
       APP_URL: ${APP_URL:-http://localhost:8080}
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}          # Leave empty for mock payment mode
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
     ports:
       - "8080:80"
     volumes:
-      - ./web:/var/www/html
+      - ./web:/var/www/html  # Hot-reload: edit files locally, see changes immediately
     depends_on:
       db:
         condition: service_healthy
 
 volumes:
   db_data:
-

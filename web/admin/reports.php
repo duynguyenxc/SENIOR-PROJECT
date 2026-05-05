@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+// Sales analytics dashboard (SuperAdmin only).
+// Shows KPIs, best/worst sellers, pickup windows, and status breakdown
+// for a selectable date range.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/reporting.php';
 

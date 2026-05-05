@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Admin/Staff login page.
+// Authenticates against the Admin table, checks isActive, then redirects to the dashboard.
+
 require_once __DIR__ . '/../lib/layout.php';
 ensure_session_started();
 

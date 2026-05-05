@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Staff account management (SuperAdmin only).
+// Create accounts, enable/disable access, and issue temporary passwords.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/staff.php';
 

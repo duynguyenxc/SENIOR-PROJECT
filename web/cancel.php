@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Payment cancellation page.
+// Cancels the unpaid order and shows a message to the customer.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/payment.php';
 

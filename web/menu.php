@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Public weekly menu page.
+// Shows dishes for a selected day. Defaults to the current day of the week.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/menu_catalog.php';
 
@@ -8,6 +11,7 @@ $pdo = db();
 
 $days = fetch_days($pdo);
 
+// Default to today's day of the week if no day is specified in the URL
 $dayId = (int)($_GET['day'] ?? 0);
 if ($dayId <= 0 && $days) {
   $currentDaySort = (int)date('N');
@@ -24,6 +28,7 @@ $day = $dayId > 0 ? fetch_day_by_id($pdo, $dayId) : null;
 
 $dishes = $day ? fetch_day_menu_dishes($pdo, (int)$day['dayId']) : [];
 
+// Thursday (sortOrder 4) has a discounted price
 $price = ($day && (int)$day['sortOrder'] === 4) ? 15 : 17;
 
 render_header('Menu');

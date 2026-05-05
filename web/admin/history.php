@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Order history — shows all past orders grouped by date.
+// SuperAdmin can permanently delete order records from here.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/orders.php';
 $admin = require_admin();

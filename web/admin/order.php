@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Admin order detail view (read-only).
+// Shows full order info, items, payment reference, and customer notes.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/orders.php';
 

@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Payment success callback.
+// Verifies the Stripe session, marks the order as Paid, and shows a confirmation.
+
 require_once __DIR__ . '/lib/layout.php';
 require_once __DIR__ . '/lib/payment.php';
 ensure_session_started();

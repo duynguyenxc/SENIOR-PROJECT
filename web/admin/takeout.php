@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+
+// Takeout set management (SuperAdmin only).
+// Create, edit, and delete the meal boxes shown on the public takeout page.
+
 require_once __DIR__ . '/../lib/layout.php';
 require_once __DIR__ . '/../lib/takeout_catalog.php';
 require_once __DIR__ . '/../lib/upload.php';
